@@ -6,7 +6,6 @@ cd /github/workspace
 ls
 
 mkdir -p dist/usr/local/lib64
-cd cloudhsm
 mkdir build
 cd build
 cmake --version

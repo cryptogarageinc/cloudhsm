@@ -20,7 +20,7 @@
 
 #include "common.h"
 
-CK_FUNCTION_LIST *funcs;
+CK_FUNCTION_LIST *funcs = NULL;
 
 /**
  * Load the available PKCS#11 functions into our global function list.
@@ -124,6 +124,10 @@ CK_RV pkcs11_open_session(const CK_UTF8CHAR_PTR pin, CK_SESSION_HANDLE_PTR sessi
         return CKR_ARGUMENTS_BAD;
     }
 
+    if (!funcs) {
+        return CKR_FUNCTION_FAILED;
+    }
+
     rv = pkcs11_get_slot(&slot_id);
     if (rv != CKR_OK) {
         return rv;
@@ -145,10 +149,53 @@ CK_RV pkcs11_open_session(const CK_UTF8CHAR_PTR pin, CK_SESSION_HANDLE_PTR sessi
 }
 
 /**
+ * Get a session information.
+ * @param session
+ * @param slotID
+ * @param state
+ * @param flags
+ * @param ulDeviceError
+ * @return
+ */
+CK_RV pkcs11_get_session_info(CK_SESSION_HANDLE session, CK_ULONG* slotID,
+        CK_ULONG* state, CK_ULONG* flags, CK_ULONG* ulDeviceError) {
+    CK_RV rv;
+    struct CK_SESSION_INFO info;
+    memset(&info, 0, sizeof(info));
+
+    if (!funcs) {
+        return CKR_FUNCTION_FAILED;
+    }
+
+    rv = funcs->C_GetSessionInfo(session, &info);
+    if (rv == CKR_OK) {
+        if (slotID != NULL) {
+            memcpy(slotID, &info.slotID, sizeof(info.slotID));
+        }
+        if (state != NULL) {
+            memcpy(state, &info.state, sizeof(info.state));
+        }
+        if (flags != NULL) {
+            memcpy(flags, &info.flags, sizeof(info.flags));
+        }
+        if (ulDeviceError != NULL) {
+            memcpy(ulDeviceError, &info.ulDeviceError,
+                   sizeof(info.ulDeviceError));
+        }
+    }
+    return rv;
+}
+
+/**
  * Logout and finalize the PKCS#11 session.
  * @param session
  */
 void pkcs11_finalize_session(CK_SESSION_HANDLE session) {
+    if (!funcs) {
+        printf("functions not loaded.");
+        return;
+    }
+
     funcs->C_Logout(session);
     funcs->C_CloseSession(session);
     funcs->C_Finalize(NULL);
@@ -159,6 +206,11 @@ void pkcs11_finalize_session(CK_SESSION_HANDLE session) {
  * @param session
  */
 void pkcs11_close_session(CK_SESSION_HANDLE session) {
+    if (!funcs) {
+        printf("functions not loaded.");
+        return;
+    }
+
     funcs->C_Logout(session);
     funcs->C_CloseSession(session);
 }
@@ -167,5 +219,10 @@ void pkcs11_close_session(CK_SESSION_HANDLE session) {
  * Finalize the PKCS#11.
  */
 void pkcs11_finalize() {
+    if (!funcs) {
+        printf("functions not loaded.");
+        return;
+    }
+
     funcs->C_Finalize(NULL);
 }

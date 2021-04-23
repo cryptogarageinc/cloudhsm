@@ -30,6 +30,10 @@ CK_RV generate_signature(CK_SESSION_HANDLE session,
     CK_RV rv;
     CK_MECHANISM mech;
 
+    if (!funcs) {
+        return CKR_FUNCTION_FAILED;
+    }
+
     mech.mechanism = mechanism;
     mech.ulParameterLen = 0;
     mech.pParameter = NULL;
@@ -54,6 +58,10 @@ CK_RV verify_signature(CK_SESSION_HANDLE session,
 {
     CK_RV rv;
     CK_MECHANISM mech;
+
+    if (!funcs) {
+        return CKR_FUNCTION_FAILED;
+    }
 
     mech.mechanism = mechanism;
     mech.ulParameterLen = 0;
@@ -98,6 +106,10 @@ CK_RV generate_ec_keypair(CK_SESSION_HANDLE session,
         {CKA_PRIVATE, &true_val, sizeof(CK_BBOOL)},
         {CKA_TOKEN, &true_val, sizeof(CK_BBOOL)},
     };
+
+    if (!funcs) {
+        return CKR_FUNCTION_FAILED;
+    }
 
     rv = funcs->C_GenerateKeyPair(session,
                                   &mech,
@@ -202,6 +214,10 @@ CK_RV get_ec_pubkey(CK_SESSION_HANDLE session,
     {
         return CKR_GENERAL_ERROR;
     }
+    if (!funcs) {
+        return CKR_FUNCTION_FAILED;
+    }
+
     buffer_size = *pubkey_length;
 
     rv = attributes_get(session, key, CKA_EC_POINT, NULL, &size);

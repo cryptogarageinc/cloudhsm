@@ -133,6 +133,12 @@ const CKR_FUNCTION_REJECTED = 0x00000200
 
 const CKR_VENDOR_DEFINED = 0x80000000
 
+const CKS_RO_PUBLIC_SESSION = 0
+const CKS_RO_USER_FUNCTIONS = 1
+const CKS_RW_PUBLIC_SESSION = 2
+const CKS_RW_USER_FUNCTIONS = 3
+const CKS_RW_SO_FUNCTIONS = 4
+
 func convertRVtoByte(rv CK_RV) (err error) {
 	retCode := *(*uint64)(unsafe.Pointer(rv.Swigcptr()))
 	if retCode == uint64(0) {
@@ -161,6 +167,38 @@ func Pkcs11OpenSession(pin string) (sessionHandler uint64, err error) {
 		sessionHandler = session
 	}
 	return
+}
+
+type SessionInfo struct {
+	// SlotID
+	SlotID uint64
+	// State
+	State uint64
+	// Flags
+	Flags uint64
+	// DeviceError
+	DeviceError uint64
+}
+
+func Pkcs11GetSessionInfo(session uint64) (info *SessionInfo, err error) {
+	sessionPtr := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&session)))
+
+	data := SessionInfo{}
+	slotIdPtr := uintptr(unsafe.Pointer(&data.SlotID))
+	statePtr := uintptr(unsafe.Pointer(&data.State))
+	flagsPtr := uintptr(unsafe.Pointer(&data.Flags))
+	deviceErrorPtr := uintptr(unsafe.Pointer(&data.DeviceError))
+	slotIdPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&slotIdPtr)))
+	statePtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&statePtr)))
+	flagsPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&flagsPtr)))
+	deviceErrorPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&deviceErrorPtr)))
+
+	rv := Pkcs11_get_session_info(sessionPtr, slotIdPtrObj, statePtrObj, flagsPtrObj, deviceErrorPtrObj)
+	err = convertRVtoByte(rv)
+	if err != nil {
+		return nil, err
+	}
+	return &data, nil
 }
 
 func Pkcs11FinalizeSession(session uint64) {

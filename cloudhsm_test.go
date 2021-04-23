@@ -22,6 +22,13 @@ func TestSigning(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEqual(t, uint64(0), sessionHandle)
 
+	sessionInfo, err := Pkcs11GetSessionInfo(sessionHandle)
+	assert.NoError(t, err)
+	assert.NotNil(t, sessionInfo)
+	if sessionInfo != nil {
+		assert.NotEqual(t, uint64(0), sessionInfo.State)
+	}
+
 	signature, err := GenerateSignature(sessionHandle, privkey, mechType, data[:])
 	assert.NoError(t, err)
 

@@ -35,6 +35,9 @@ CK_RV pkcs11_initialize(char *library_path);
 CK_RV pkcs11_open_session(const CK_UTF8CHAR_PTR pin, CK_SESSION_HANDLE_PTR session);
 CK_RV pkcs11_get_slot(CK_SLOT_ID *slot_id);
 
+CK_RV pkcs11_get_session_info(CK_SESSION_HANDLE session, CK_ULONG* slotID,
+        CK_ULONG* state, CK_ULONG* flags, CK_ULONG* ulDeviceError);
+
 void pkcs11_finalize_session(CK_SESSION_HANDLE session);
 void pkcs11_close_session(CK_SESSION_HANDLE session);
 void pkcs11_finalize();

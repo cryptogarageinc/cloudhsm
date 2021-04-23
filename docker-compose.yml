@@ -1,0 +1,13 @@
+version: '3.5'
+
+services:
+  wasm-build:
+    container_name: 'cloudhsm_util_tester'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cloudhsm_util_container
+    working_dir: /github/workspace
+    volumes:
+      - .:/github/workspace/cloudhsm
+    entrypoint: /github/workspace/cloudhsm/tools/build_and_test.sh
