@@ -197,7 +197,7 @@ jobs:
     runs-on: ubuntu-${{ matrix.os_ver }}.04
     strategy:
       matrix:
-        os_ver: [20, 18, 16]
+        os_ver: [20, 18]
         bin: [gcc, gcc-static]
         include:
           - bin: gcc
