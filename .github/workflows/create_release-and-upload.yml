@@ -191,6 +191,56 @@ jobs:
         asset_name: cloudhsm-${{ steps.get_version.outputs.VERSION }}-alpine-3.13-x86_64.zip
         asset_content_type: application/zip
 
+  upload-object-alpine-3-14:
+    name: upload-object-alpine 3.14
+    runs-on: ubuntu-20.04
+    needs: create_releases
+
+    steps:
+    - name: checkout
+      uses: actions/checkout@v2
+    - name: output url
+      id: get_url
+      run: echo "::set-output name=upload_url::${{ needs.create_releases.outputs.release_url }}"
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+    - name: list
+      run: ls -a $GITHUB_WORKSPACE
+    - name: docker setup
+      uses: docker://alpine:3.14
+      with:
+        entrypoint: /github/workspace/.github/workflows/docker/alpine_build_entrypoint.sh
+    - name: create archive file
+      run: |
+        echo "---- dump output data ----"
+        ls -l $GITHUB_WORKSPACE/dist/usr/local/*
+        mkdir -p /tmp/cloudhsm
+        sudo chmod 777 /tmp/cloudhsm
+        sudo chown runner /tmp/cloudhsm
+        sudo cp -r $GITHUB_WORKSPACE/dist/usr /tmp/cloudhsm
+        cd /tmp/cloudhsm
+        sudo zip -r /tmp/cloudhsm/cloudhsm.zip usr
+        sudo chmod 777 /tmp/cloudhsm/cloudhsm.zip
+        sudo chown runner /tmp/cloudhsm/cloudhsm.zip
+        sudo cp -rp /tmp/cloudhsm/cloudhsm.zip $GITHUB_WORKSPACE/dist/cloudhsm.zip
+        echo "---- dump zip file ----"
+        sudo ls -l /tmp/cloudhsm
+    - name: pre-release-test
+      uses: docker://golang:1.17-alpine3.14
+      with:
+        entrypoint: /github/workspace/.github/workflows/docker/alpine_test_entrypoint.sh
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_url.outputs.upload_url }}
+        asset_path: /tmp/cloudhsm/cloudhsm.zip
+        asset_name: cloudhsm-${{ steps.get_version.outputs.VERSION }}-alpine-3.14-x86_64.zip
+        asset_content_type: application/zip
+
   upload-object-ubuntu:
     name: upload-object-ubuntu
     needs: create_releases
