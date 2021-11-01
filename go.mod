@@ -1,4 +1,4 @@
-module github.com/cryptogarageinc/cloudhsm
+module github.com/cryptogarageinc/cloudhsm/v2
 
 go 1.14
 
