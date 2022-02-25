@@ -260,7 +260,7 @@ jobs:
     - name: docker setup
       uses: docker://alpine:3.15
       with:
-        entrypoint: /github/workspace/.github/workflows/docker/alpine_build_entrypoint.sh
+        entrypoint: /github/workspace/.github/workflows/docker/alpine_build_entrypoint_after_3_15.sh
     - name: create archive file
       run: |
         echo "---- dump output data ----"
