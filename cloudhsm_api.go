@@ -403,7 +403,7 @@ func init() {
 }
 
 func logging(level LogLevel, funcName, message string) {
-	if message != "" {
+	if logFunc != nil && message != "" {
 		logFunc(level, funcName+":"+message)
 	}
 }
