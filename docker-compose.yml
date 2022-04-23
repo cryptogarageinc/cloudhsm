@@ -1,7 +1,7 @@
 version: '3.5'
 
 services:
-  wasm-build:
+  hsm-build:
     container_name: 'cloudhsm_util_tester'
     build:
       context: .

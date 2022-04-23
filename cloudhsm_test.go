@@ -1,14 +1,21 @@
 package cloudhsm
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSigning(t *testing.T) {
+	SetLogger(func(level LogLevel, message string) {
+		if message != "" {
+			fmt.Printf("[%s] %s\n", level, message)
+		}
+	})
+
 	// libPath := "/opt/cloudhsm/lib/libcloudhsm_pkcs11.so"
-	libPath := "/your/library/path"
+	libPath := "/usr/lib/pkcs11/onepin-opensc-pkcs11.so" // for docker  // onepin-opensc-pkcs11.so  opensc-pkcs11.so
 	pin := []byte("user:password")
 	privkey := uint64(0)
 	mechType := uint64(0x00001041) // ECDSA

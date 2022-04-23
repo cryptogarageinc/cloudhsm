@@ -1,6 +1,6 @@
-FROM golang:1.16-alpine3.13 as cloudhsm_util_container
+FROM golang:1.18-alpine3.14 as cloudhsm_util_container
 
-RUN apk add --update --no-cache musl gcc g++ make git cmake openssl-dev
+RUN apk add --update --no-cache musl gcc g++ make git cmake openssl-dev opensc
 
 RUN mkdir -p /github/workspace
 

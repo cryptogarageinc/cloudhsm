@@ -14,8 +14,8 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifndef __C_SAMPLES_H__
-#define __C_SAMPLES_H__
+#ifndef AWS_CLOUDHSM_PKCS11_INTERNA_H
+#define AWS_CLOUDHSM_PKCS11_INTERNA_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,25 +23,13 @@ extern "C" {
 
 #include <sys/types.h>
 #include <cryptoki.h>
-#include <cloudhsm_pkcs11_vendor_defs.h>
 
-CK_RV pkcs11_initialize(void *context, char *library_path);
+extern CK_FUNCTION_LIST *funcs;
 
-CK_RV pkcs11_open_session(void *context, const CK_UTF8CHAR_PTR pin, CK_SESSION_HANDLE_PTR session);
-
-CK_RV pkcs11_get_session_info(CK_SESSION_HANDLE session, CK_ULONG* slotID,
-        CK_ULONG* state, CK_ULONG* flags, CK_ULONG* ulDeviceError);
-
-void pkcs11_finalize_session(CK_SESSION_HANDLE session);
-void pkcs11_close_session(CK_SESSION_HANDLE session);
-void pkcs11_finalize();
-
-int bytes_to_new_hexstring(char *bytes, size_t bytes_len, char **hex);
-
-CK_RV pkcs11_create_context(void **context);
-void pkcs11_free_context(void *context);
-CK_RV pkcs11_get_last_error_message(void *context, char **str);
-CK_RV pkcs11_get_last_message(void *context, char **str);
+typedef struct _Pkcs11Context {
+    char error_message[128];
+    char message[128];
+} Pkcs11Context;
 
 #ifdef __cplusplus
 }

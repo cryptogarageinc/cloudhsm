@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this
  * software and associated documentation files (the "Software"), to deal in the Software
@@ -15,11 +15,15 @@
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 #include "sign.h"
+#include <string.h>
 #include "attributes.h"
+#include "internal.h"
 
-#define MAX_SIGNATURE_LENGTH 256
+static CK_BBOOL true_val = TRUE;
+/* static CK_BBOOL false_val = FALSE; */
 
-CK_RV generate_signature(CK_SESSION_HANDLE session,
+CK_RV generate_signature(void *context,
+                         CK_SESSION_HANDLE session,
                          CK_OBJECT_HANDLE key,
                          CK_MECHANISM_TYPE mechanism,
                          CK_BYTE_PTR data,
@@ -29,7 +33,18 @@ CK_RV generate_signature(CK_SESSION_HANDLE session,
 {
     CK_RV rv;
     CK_MECHANISM mech;
+    Pkcs11Context *ctx = (Pkcs11Context *)context;
 
+    if (!context) {
+        return CKR_ARGUMENTS_BAD;
+    }
+
+    if ((data == NULL) || (signature == NULL) || (signature_length == NULL)) {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "BadArg. IN:pData[%p], pSig[%p], pSigLen[%p]",
+                 data, signature, signature_length);
+        return CKR_ARGUMENTS_BAD;
+    }
     if (!funcs) {
         return CKR_FUNCTION_FAILED;
     }
@@ -39,16 +54,29 @@ CK_RV generate_signature(CK_SESSION_HANDLE session,
     mech.pParameter = NULL;
 
     rv = funcs->C_SignInit(session, &mech, key);
-    if (rv != CKR_OK)
-    {
+    if (rv != CKR_OK) {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "SignInit.ERR[%#lx]. IN:session[%lu], mechanism[%#lx]",
+                 rv, session, mechanism);
         return rv;
     }
 
     rv = funcs->C_Sign(session, data, data_length, signature, signature_length);
+    if (rv == CKR_OK) {
+        snprintf(ctx->message, sizeof(ctx->message) - 1,
+                 "Sign.OK. IN:session[%lu], dataLen[%lu] OUT:sigLen[%lu]",
+                 session, data_length, *signature_length);
+    }
+    else {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "Sign.ERR[%#lx]. IN:session[%lu], dataLen[%lu]",
+                 rv, session, data_length);
+    }
     return rv;
 }
 
-CK_RV verify_signature(CK_SESSION_HANDLE session,
+CK_RV verify_signature(void *context,
+                       CK_SESSION_HANDLE session,
                        CK_OBJECT_HANDLE key,
                        CK_MECHANISM_TYPE mechanism,
                        CK_BYTE_PTR data,
@@ -58,6 +86,11 @@ CK_RV verify_signature(CK_SESSION_HANDLE session,
 {
     CK_RV rv;
     CK_MECHANISM mech;
+    Pkcs11Context *ctx = (Pkcs11Context *)context;
+
+    if (!context) {
+        return CKR_ARGUMENTS_BAD;
+    }
 
     if (!funcs) {
         return CKR_FUNCTION_FAILED;
@@ -68,17 +101,30 @@ CK_RV verify_signature(CK_SESSION_HANDLE session,
     mech.pParameter = NULL;
 
     rv = funcs->C_VerifyInit(session, &mech, key);
-    if (rv != CKR_OK)
-    {
+    if (rv != CKR_OK) {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "VerifyInit.ERR[%#lx]. IN:session[%lu], mechanism[%#lx], pk[%lu]",
+                 rv, session, mechanism, key);
         return rv;
     }
 
     rv = funcs->C_Verify(session, data, data_length, signature, signature_length);
+    if (rv == CKR_OK) {
+        snprintf(ctx->message, sizeof(ctx->message) - 1,
+                 "Verify.OK. IN:session[%lu], pk[%lu], dataLen[%lu], sigLen[%lu]",
+                 session, key, data_length, signature_length);
+    }
+    else {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "Verify.ERR[%#lx]. IN:session[%lu], pk[%lu], dataLen[%lu], sigLen[%lu]",
+                 rv, session, key, data_length, signature_length);
+    }
     return rv;
 }
 
 /**
  * Generate an EC key pair suitable for signing data and verifying signatures.
+ * @param context context.
  * @param session Valid PKCS11 session.
  * @param named_curve_oid Curve to use when generating key pair. Valid curves are listed here: https://docs.aws.amazon.com/cloudhsm/latest/userguide/pkcs11-key-types.html
  * @param named_curve_oid_len Length of the OID
@@ -86,7 +132,8 @@ CK_RV verify_signature(CK_SESSION_HANDLE session,
  * @param private_key Pointer where the private key handle will be stored.
  * @return CK_RV Value returned by the PKCS#11 library. This will indicate success or failure.
  */
-CK_RV generate_ec_keypair(CK_SESSION_HANDLE session,
+CK_RV generate_ec_keypair(void *context,
+                          CK_SESSION_HANDLE session,
                           CK_BYTE_PTR named_curve_oid,
                           CK_ULONG named_curve_oid_len,
                           CK_OBJECT_HANDLE_PTR public_key,
@@ -94,19 +141,29 @@ CK_RV generate_ec_keypair(CK_SESSION_HANDLE session,
 {
     CK_RV rv;
     CK_MECHANISM mech = {CKM_EC_KEY_PAIR_GEN, NULL, 0};
+    Pkcs11Context *ctx = (Pkcs11Context *)context;
 
     CK_ATTRIBUTE public_key_template[] = {
-        {CKA_VERIFY, &true_val, sizeof(CK_BBOOL)},
+        {CKA_VERIFY,    &true_val,       sizeof(CK_BBOOL)},
         {CKA_EC_PARAMS, named_curve_oid, named_curve_oid_len},
-        {CKA_TOKEN, &true_val, sizeof(CK_BBOOL)},
+        {CKA_TOKEN,     &true_val,       sizeof(CK_BBOOL)},
     };
 
     CK_ATTRIBUTE private_key_template[] = {
-        {CKA_SIGN, &true_val, sizeof(CK_BBOOL)},
+        {CKA_SIGN,    &true_val, sizeof(CK_BBOOL)},
         {CKA_PRIVATE, &true_val, sizeof(CK_BBOOL)},
-        {CKA_TOKEN, &true_val, sizeof(CK_BBOOL)},
+        {CKA_TOKEN,   &true_val, sizeof(CK_BBOOL)},
     };
 
+    if (!context) {
+        return CKR_ARGUMENTS_BAD;
+    }
+
+    if ((public_key == NULL) || (private_key == NULL)) {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "BadArg. IN:pPk[%p], pSk[%p]", public_key, private_key);
+        return CKR_ARGUMENTS_BAD;
+    }
     if (!funcs) {
         return CKR_FUNCTION_FAILED;
     }
@@ -117,90 +174,37 @@ CK_RV generate_ec_keypair(CK_SESSION_HANDLE session,
                                   private_key_template, sizeof(private_key_template) / sizeof(CK_ATTRIBUTE),
                                   public_key,
                                   private_key);
+    if (rv == CKR_OK) {
+        snprintf(ctx->message, sizeof(ctx->message) - 1,
+                 "GenKeyPair.OK. IN:session[%lu], OUT:pk[%lu]", session, *public_key);
+    }
+    else {
+        char *hex_str = NULL;
+        if (bytes_to_new_hexstring(named_curve_oid, named_curve_oid_len, &hex_str) == 0) {
+            snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                     "GenKeyPair.ERR[%#lx]. IN:session[%lu], namedCurvePid[%s]",
+                     rv, session, hex_str);
+            free(hex_str);
+        }
+        else {
+            snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                     "GenKeyPair.ERR[%#lx]. IN:session[%lu]", rv, session);
+        }
+    }
     return rv;
 }
 
-CK_RV ec_main(CK_SESSION_HANDLE session)
-{
-    CK_RV rv;
-    CK_BYTE_PTR data = "Some data to sign";
-    CK_ULONG data_length = strlen(data);
-
-    CK_BYTE signature[MAX_SIGNATURE_LENGTH];
-    CK_ULONG signature_length = MAX_SIGNATURE_LENGTH;
-
-    // Set the PKCS11 signature mechanism type.
-    CK_MECHANISM_TYPE mechanism = CKM_ECDSA;
-
-    /**
-     * Curve OIDs generated using OpenSSL on the command line.
-     * Visit https://docs.aws.amazon.com/cloudhsm/latest/userguide/pkcs11-key-types.html for a list
-     * of supported curves.
-     * openssl ecparam -name secp256k1 -outform DER | hexdump -C
-     */
-    CK_BYTE secp256k1[] = {0x06, 0x05, 0x2b, 0x81, 0x04, 0x00, 0x0a};
-
-    CK_OBJECT_HANDLE pubkey = CK_INVALID_HANDLE;
-    CK_OBJECT_HANDLE privkey = CK_INVALID_HANDLE;
-    rv = generate_ec_keypair(session, secp256k1, sizeof(secp256k1), &pubkey, &privkey);
-    if (rv == CKR_OK)
-    {
-        printf("secp256k1 key generated. Public key handle: %lu, Private key handle: %lu\n", pubkey,
-               privkey);
-    }
-    else
-    {
-        printf("secp256k1 key generation failed: %lu\n", rv);
-        return rv;
-    }
-
-    rv = generate_signature(session, privkey, mechanism,
-                            data, data_length, signature, &signature_length);
-    if (rv == CKR_OK)
-    {
-        unsigned char *hex_signature = NULL;
-        bytes_to_new_hexstring(signature, signature_length, &hex_signature);
-        if (!hex_signature)
-        {
-            printf("Could not allocate hex array\n");
-            return 1;
-        }
-        printf("Data: %s\n", data);
-        printf("Signature: %s\n", hex_signature);
-        free(hex_signature);
-        hex_signature = NULL;
-    }
-    else
-    {
-        printf("Signature generation failed: %lu\n", rv);
-        return rv;
-    }
-
-    rv = verify_signature(session, pubkey, mechanism, data, data_length, signature, signature_length);
-    if (rv == CKR_OK)
-    {
-        printf("Verification successful\n");
-    }
-    else
-    {
-        printf("Verification failed: %lu\n", rv);
-        return rv;
-    }
-
-    return 0;
-}
-
-#define MAX_PUBKEY_LENGTH 256
-
 /**
  * Get an EC pubkey.
+ * @param context context.
  * @param session Valid PKCS11 session.
  * @param key Pointer where the public key handle will be stored.
  * @param pubkey Pointer where the public key byte array.
  * @param pubkey_length public key byte array length.
  * @return CK_RV Value returned by the PKCS#11 library. This will indicate success or failure.
  */
-CK_RV get_ec_pubkey(CK_SESSION_HANDLE session,
+CK_RV get_ec_pubkey(void *context,
+                    CK_SESSION_HANDLE session,
                     CK_OBJECT_HANDLE key,
                     CK_BYTE_PTR pubkey,
                     CK_ULONG_PTR pubkey_length)
@@ -209,10 +213,16 @@ CK_RV get_ec_pubkey(CK_SESSION_HANDLE session,
     size_t size = 0;
     uint8_t *buffer = NULL;
     size_t buffer_size = 0;
+    Pkcs11Context *ctx = (Pkcs11Context *)context;
 
-    if ((pubkey == NULL) || (pubkey_length == NULL))
-    {
-        return CKR_GENERAL_ERROR;
+    if (!context) {
+        return CKR_ARGUMENTS_BAD;
+    }
+
+    if ((pubkey == NULL) || (pubkey_length == NULL)) {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "BadArg. IN:pPk[%p], pPkLen[%p]", pubkey, pubkey_length);
+        return CKR_ARGUMENTS_BAD;
     }
     if (!funcs) {
         return CKR_FUNCTION_FAILED;
@@ -221,30 +231,36 @@ CK_RV get_ec_pubkey(CK_SESSION_HANDLE session,
     buffer_size = *pubkey_length;
 
     rv = attributes_get(session, key, CKA_EC_POINT, NULL, &size);
-    if (rv != CKR_OK)
-    {
-        // printf("attributes_get failed: %lu\n", rv);
+    if (rv != CKR_OK) {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "GetArg.ERR[%#lx]. IN:session[%lu], key[%lu]", rv, session, key);
         return rv;
     }
 
-    if (buffer_size < size)
-    {
-        printf("pubkey_length size low: %lu\n", size);
+    if (buffer_size < size) {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "low pkLen. IN:pkLen[%lu], needLen[%lu]", size, buffer_size);
         return CKR_ARGUMENTS_BAD;
     }
 
     buffer = (uint8_t *)malloc(size);
-    if (buffer == NULL)
-    {
+    if (buffer == NULL) {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "malloc.ERR. IN:pkLen[%lu]", size);
         return CKR_HOST_MEMORY;
     }
 
     memset(buffer, 0, size);
     rv = attributes_get(session, key, CKA_EC_POINT, buffer, &size);
-    if (rv == CKR_OK)
-    {
+    if (rv == CKR_OK) {
         memcpy(pubkey, buffer, size);
         *pubkey_length = (CK_ULONG)size;
+        snprintf(ctx->message, sizeof(ctx->message) - 1,
+                 "GetArg.OK. IN:session[%lu], key[%lu]", session, key);
+    }
+    else {
+        snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
+                 "GetArg.ERR[%#lx]. IN:session[%lu], key[%lu]", rv, session, key);
     }
     memset(buffer, 0, size);
     free(buffer);
