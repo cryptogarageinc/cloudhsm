@@ -446,5 +446,5 @@ func convertRVtoByte(rv CK_RV) (err error) {
 	} else {
 		err = fmt.Errorf("cloudhsm Error: errorCode=[%#x]", retCode)
 	}
-	return
+	return err
 }

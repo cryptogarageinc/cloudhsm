@@ -56,22 +56,19 @@ extern uintptr_t _wrap_get_ec_pubkey_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, u
 */
 import "C"
 
-import "unsafe"
-import _ "runtime/cgo"
-import "sync"
-
+import (
+	_ "runtime/cgo"
+	"sync"
+	"unsafe"
+)
 
 type _ unsafe.Pointer
-
-
 
 var Swig_escape_always_false bool
 var Swig_escape_val interface{}
 
-
 type _swig_fnptr *byte
 type _swig_memberptr *byte
-
 
 type _ sync.Mutex
 
@@ -174,6 +171,7 @@ func Pkcs11_get_last_message(arg1 uintptr, arg2 *string) (_swig_ret CK_RV) {
 
 const MAX_PUBKEY_LENGTH int = 256
 const MAX_SIGNATURE_LENGTH int = 256
+
 func Generate_signature(arg1 uintptr, arg2 CK_SESSION_HANDLE, arg3 CK_OBJECT_HANDLE, arg4 CK_MECHANISM_TYPE, arg5 CK_BYTE_PTR, arg6 CK_ULONG, arg7 CK_BYTE_PTR, arg8 CK_ULONG_PTR) (_swig_ret CK_RV) {
 	var swig_r CK_RV
 	_swig_i_0 := arg1
@@ -224,8 +222,6 @@ func Get_ec_pubkey(arg1 uintptr, arg2 CK_SESSION_HANDLE, arg3 CK_OBJECT_HANDLE, 
 	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_get_ec_pubkey_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4))))
 	return swig_r
 }
-
-
 
 const CKR_CANCEL = 0x00000001
 const CKR_HOST_MEMORY = 0x00000002
@@ -354,85 +350,92 @@ const CKS_RW_PUBLIC_SESSION = 2
 const CKS_RW_USER_FUNCTIONS = 3
 const CKS_RW_SO_FUNCTIONS = 4
 
-
-
 type SwigcptrCK_SESSION_HANDLE_PTR uintptr
 type CK_SESSION_HANDLE_PTR interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_SESSION_HANDLE_PTR) Swigcptr() uintptr {
 	return uintptr(p)
 }
 
 type SwigcptrCK_OBJECT_HANDLE_PTR uintptr
 type CK_OBJECT_HANDLE_PTR interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_OBJECT_HANDLE_PTR) Swigcptr() uintptr {
 	return uintptr(p)
 }
 
 type SwigcptrCK_MECHANISM_TYPE uintptr
 type CK_MECHANISM_TYPE interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_MECHANISM_TYPE) Swigcptr() uintptr {
 	return uintptr(p)
 }
 
 type SwigcptrCK_RV uintptr
 type CK_RV interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_RV) Swigcptr() uintptr {
 	return uintptr(p)
 }
 
 type SwigcptrCK_UTF8CHAR_PTR uintptr
 type CK_UTF8CHAR_PTR interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_UTF8CHAR_PTR) Swigcptr() uintptr {
 	return uintptr(p)
 }
 
 type SwigcptrCK_SESSION_HANDLE uintptr
 type CK_SESSION_HANDLE interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_SESSION_HANDLE) Swigcptr() uintptr {
 	return uintptr(p)
 }
 
 type SwigcptrCK_ULONG uintptr
 type CK_ULONG interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_ULONG) Swigcptr() uintptr {
 	return uintptr(p)
 }
 
 type SwigcptrCK_OBJECT_HANDLE uintptr
 type CK_OBJECT_HANDLE interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_OBJECT_HANDLE) Swigcptr() uintptr {
 	return uintptr(p)
 }
 
 type SwigcptrCK_BYTE_PTR uintptr
 type CK_BYTE_PTR interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_BYTE_PTR) Swigcptr() uintptr {
 	return uintptr(p)
 }
 
 type SwigcptrCK_ULONG_PTR uintptr
 type CK_ULONG_PTR interface {
-	Swigcptr() uintptr;
+	Swigcptr() uintptr
 }
+
 func (p SwigcptrCK_ULONG_PTR) Swigcptr() uintptr {
 	return uintptr(p)
 }
-

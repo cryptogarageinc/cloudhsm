@@ -7,8 +7,10 @@ update:
 
 format:
 	go run golang.org/x/tools/cmd/goimports@v0.1.10 -w .
-	go vet .
 	go mod tidy
+
+vet:
+	LD_LIBRARY_PATH="./build/Release" go vet .
 
 build:
 	mkdir build
