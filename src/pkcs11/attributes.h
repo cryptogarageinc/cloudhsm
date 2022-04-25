@@ -38,17 +38,7 @@ CK_RV attributes_get(
         CK_OBJECT_HANDLE object,
         CK_ATTRIBUTE_TYPE type,
         uint8_t *buf,
-        size_t *buf_len );
-
-int attributes_output(
-        uint8_t *buf,
-        size_t buf_len,
-        FILE *f);
-
-CK_RV attributes_output_all(
-        CK_SESSION_HANDLE session,
-        CK_OBJECT_HANDLE object,
-        FILE *f );
+        CK_ULONG_PTR buf_len );
 
 #ifdef  __cplusplus
 }

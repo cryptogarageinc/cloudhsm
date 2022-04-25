@@ -3,13 +3,20 @@
 #include "src/pkcs11/common.h"
 #include "src/pkcs11/sign.h"
 %}
+
+%typemap(argout) (char **) {
+  if ($1 && *$1) {
+    $input->n = strlen(*$1);
+  }
+}
+
 %insert(cgo_comment_typedefs) %{
 #cgo CPPFLAGS: -I${SRCDIR}/include/pkcs11/v2.40
 #cgo LDFLAGS: -L${SRCDIR}/build/Release -L/usr/local/lib -L/usr/local/lib64 -lcloudhsmpkcs11util -ldl
 %}
 %include "src/pkcs11/common.h"
 %include "src/pkcs11/sign.h"
-%go_import("fmt", "unsafe")
+%go_import("unsafe")
 %insert(go_wrapper) %{
 
 const CKR_CANCEL = 0x00000001
@@ -139,212 +146,4 @@ const CKS_RW_PUBLIC_SESSION = 2
 const CKS_RW_USER_FUNCTIONS = 3
 const CKS_RW_SO_FUNCTIONS = 4
 
-func convertRVtoByte(rv CK_RV) (err error) {
-	retCode := *(*uint64)(unsafe.Pointer(rv.Swigcptr()))
-	if retCode == uint64(0) {
-		return nil
-	} else {
-		err = fmt.Errorf("cloudhsm Error: errorCode=[%#x]", retCode)
-	}
-	return
-}
-
-func Pkcs11Initialize(path string) (err error) {
-	rv := Pkcs11_initialize(path)
-	err = convertRVtoByte(rv)
-	return
-}
-
-func Pkcs11OpenSession(pin string) (sessionHandler uint64, err error) {
-	pinPtr := SwigcptrCK_UTF8CHAR_PTR(uintptr(unsafe.Pointer(&pin)))
-	session := uint64(0)
-	sessionHandlePtr := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&session)))
-	sessionPtr := SwigcptrCK_SESSION_HANDLE_PTR(uintptr(unsafe.Pointer(&sessionHandlePtr)))
-
-	rv := Pkcs11_open_session(pinPtr, sessionPtr)
-	err = convertRVtoByte(rv)
-	if err == nil {
-		sessionHandler = session
-	}
-	return
-}
-
-type SessionInfo struct {
-	// SlotID
-	SlotID uint64
-	// State
-	State uint64
-	// Flags
-	Flags uint64
-	// DeviceError
-	DeviceError uint64
-}
-
-func Pkcs11GetSessionInfo(session uint64) (info *SessionInfo, err error) {
-	sessionPtr := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&session)))
-
-	data := SessionInfo{}
-	slotIdPtr := uintptr(unsafe.Pointer(&data.SlotID))
-	statePtr := uintptr(unsafe.Pointer(&data.State))
-	flagsPtr := uintptr(unsafe.Pointer(&data.Flags))
-	deviceErrorPtr := uintptr(unsafe.Pointer(&data.DeviceError))
-	slotIdPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&slotIdPtr)))
-	statePtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&statePtr)))
-	flagsPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&flagsPtr)))
-	deviceErrorPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&deviceErrorPtr)))
-
-	rv := Pkcs11_get_session_info(sessionPtr, slotIdPtrObj, statePtrObj, flagsPtrObj, deviceErrorPtrObj)
-	err = convertRVtoByte(rv)
-	if err != nil {
-		return nil, err
-	}
-	return &data, nil
-}
-
-func Pkcs11FinalizeSession(session uint64) {
-	if session == uint64(0) {
-		// for disable Go-Compiler optimization
-		sessionObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&session)))
-		Pkcs11_finalize_session(sessionObj)
-	} else {
-		sessionObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&session)))
-		Pkcs11_finalize_session(sessionObj)
-	}
-	return
-}
-
-func Pkcs11CloseSession(session uint64) {
-	if session == uint64(0) {
-		// for disable Go-Compiler optimization
-		sessionObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&session)))
-		Pkcs11_close_session(sessionObj)
-	} else {
-		sessionObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&session)))
-		Pkcs11_close_session(sessionObj)
-	}
-	return
-}
-
-func Pkcs11Finalize() {
-	Pkcs11_finalize()
-	return
-}
-
-func GenerateSignature(sessionHandle uint64, privkey uint64, mechType uint64, data []byte) (signature [64]byte, err error) {
-	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
-	privkeyObj := SwigcptrCK_OBJECT_HANDLE(uintptr(unsafe.Pointer(&privkey)))
-	mechTypeObj := SwigcptrCK_MECHANISM_TYPE(uintptr(unsafe.Pointer(&mechType)))
-
-	dataPtr := uintptr(unsafe.Pointer(&data[0]))
-	dataObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&dataPtr)))
-
-	dataLen := uint64(len(data))
-	dataLenObj := SwigcptrCK_ULONG(unsafe.Pointer(&dataLen))
-
-	sigPtr := uintptr(unsafe.Pointer(&signature[0]))
-	sigObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&sigPtr)))
-
-	// 64 bytes signature
-	written := uint64(64)
-	sigLen := uintptr(unsafe.Pointer(&written))
-	sigLenPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&sigLen)))
-
-	rv := Generate_signature(
-		sessionHandleObj,
-		privkeyObj,
-		mechTypeObj,
-		dataObj,
-		dataLenObj,
-		sigObj,
-		sigLenPtrObj)
-
-	err = convertRVtoByte(rv)
-	return
-}
-
-func VerifySignature(sessionHandle uint64, pubkey uint64, mechType uint64, data []byte, signature []byte) (err error) {
-	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
-	pubkeyObj := SwigcptrCK_OBJECT_HANDLE(uintptr(unsafe.Pointer(&pubkey)))
-	mechTypeObj := SwigcptrCK_MECHANISM_TYPE(uintptr(unsafe.Pointer(&mechType)))
-
-	dataPtr := uintptr(unsafe.Pointer(&data[0]))
-	dataObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&dataPtr)))
-
-	dataLen := uint64(len(data))
-	dataLenObj := SwigcptrCK_ULONG(uintptr(unsafe.Pointer(&dataLen)))
-
-	sigPtr := uintptr(unsafe.Pointer(&signature[0]))
-	sigObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&sigPtr)))
-
-	sigLen := uint64(len(signature))
-	sigLenObj := SwigcptrCK_ULONG(uintptr(unsafe.Pointer(&sigLen)))
-
-	rv := Verify_signature(
-		sessionHandleObj,
-		pubkeyObj,
-		mechTypeObj,
-		dataObj,
-		dataLenObj,
-		sigObj,
-		sigLenObj)
-	err = convertRVtoByte(rv)
-	return
-}
-
-func GetPubkey(sessionHandle uint64, pubkey uint64) (pubkeyBytes []byte, err error) {
-	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
-	pubkeyObj := SwigcptrCK_OBJECT_HANDLE(uintptr(unsafe.Pointer(&pubkey)))
-
-	var data [256]byte
-	dataPtr := uintptr(unsafe.Pointer(&data[0]))
-	dataObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&dataPtr)))
-
-	written := uint64(256)
-	dataLen := uintptr(unsafe.Pointer(&written))
-	dataLenPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&dataLen)))
-
-	rv := Get_ec_pubkey(
-		sessionHandleObj,
-		pubkeyObj,
-		dataObj,
-		dataLenPtrObj)
-
-	err = convertRVtoByte(rv)
-	if err == nil {
-		pubkeyBytes = data[:written]
-	}
-	return
-}
-
-func GenerateKeyPair(sessionHandle uint64, namedCurveOid []byte) (pubkey uint64, privkey uint64, err error) {
-	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
-
-	dataPtr := uintptr(unsafe.Pointer(&namedCurveOid[0]))
-	dataObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&dataPtr)))
-
-	dataLen := uint64(len(namedCurveOid))
-	dataLenObj := SwigcptrCK_ULONG(uintptr(unsafe.Pointer(&dataLen)))
-
-	outPubkey := uint64(0)
-	outPubkeyHandlePtr := SwigcptrCK_OBJECT_HANDLE(uintptr(unsafe.Pointer(&outPubkey)))
-	outPubkeyPtr := SwigcptrCK_OBJECT_HANDLE_PTR(uintptr(unsafe.Pointer(&outPubkeyHandlePtr)))
-
-	outPrivkey := uint64(0)
-	outPrivkeyHandlePtr := SwigcptrCK_OBJECT_HANDLE(uintptr(unsafe.Pointer(&outPrivkey)))
-	outPrivkeyPtr := SwigcptrCK_OBJECT_HANDLE_PTR(uintptr(unsafe.Pointer(&outPrivkeyHandlePtr)))
-
-	rv := Generate_ec_keypair(
-		sessionHandleObj,
-		dataObj,
-		dataLenObj,
-		outPubkeyPtr,
-		outPrivkeyPtr)
-
-	err = convertRVtoByte(rv)
-	if err == nil {
-		pubkey = outPubkey
-		privkey = outPrivkey
-	}
-	return
-}
 %}
