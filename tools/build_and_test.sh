@@ -7,6 +7,7 @@ cp -rp cloudhsm cloudhsm-util
 ls
 
 cd cloudhsm-util
+rm -rf build
 mkdir build
 cd build
 cmake --version

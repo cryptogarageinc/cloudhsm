@@ -205,7 +205,7 @@ CK_RV pkcs11_open_session(void *context, const CK_UTF8CHAR_PTR pin,
         /* Ignore the error if the session used the cache. */
         rv = CKR_OK;
         snprintf(ctx->message, sizeof(ctx->message) - 1,
-                 "userAlreadyLoggedIn. OUT:session[%lu]", *session);
+                 "userAlreadyLoggedIn. slot_id[%lu] OUT:session[%lu]", slot_id, *session);
     }
     else if (rv != CKR_OK) {
         snprintf(ctx->error_message, sizeof(ctx->error_message) - 1,
@@ -214,7 +214,7 @@ CK_RV pkcs11_open_session(void *context, const CK_UTF8CHAR_PTR pin,
         *session = 0;
     } else {
         snprintf(ctx->message, sizeof(ctx->message) - 1,
-                 "OK. OUT:session[%lu]", *session);
+                 "OK. slot_id[%lu] OUT:session[%lu]", slot_id, *session);
     }
 
     return rv;
