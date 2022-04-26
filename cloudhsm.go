@@ -44,6 +44,7 @@ extern void _wrap_pkcs11_finalize_session_cloudhsm_ef3f3870b99405a1(uintptr_t ar
 extern void _wrap_pkcs11_close_session_cloudhsm_ef3f3870b99405a1(uintptr_t arg1);
 extern void _wrap_pkcs11_finalize_cloudhsm_ef3f3870b99405a1(void);
 extern swig_intgo _wrap_bytes_to_new_hexstring_cloudhsm_ef3f3870b99405a1(swig_type_2 arg1, swig_type_3 arg2, swig_voidp arg3);
+extern swig_intgo _wrap_get_ck_ulong_size_cloudhsm_ef3f3870b99405a1(void);
 extern uintptr_t _wrap_pkcs11_create_context_cloudhsm_ef3f3870b99405a1(swig_voidp arg1);
 extern void _wrap_pkcs11_free_context_cloudhsm_ef3f3870b99405a1(uintptr_t arg1);
 extern uintptr_t _wrap_pkcs11_get_last_error_message_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, swig_voidp arg2);
@@ -138,6 +139,12 @@ func Bytes_to_new_hexstring(arg1 string, arg2 int64, arg3 *string) (_swig_ret in
 	if Swig_escape_always_false {
 		Swig_escape_val = arg1
 	}
+	return swig_r
+}
+
+func Get_ck_ulong_size() (_swig_ret uint) {
+	var swig_r uint
+	swig_r = (uint)(C._wrap_get_ck_ulong_size_cloudhsm_ef3f3870b99405a1())
 	return swig_r
 }
 

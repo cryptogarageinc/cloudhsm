@@ -62,3 +62,7 @@ int bytes_to_new_hexstring(char *bytes, size_t bytes_len, char **hex_array) {
 
     return 0;
 }
+
+unsigned int get_ck_ulong_size() {
+    return sizeof(CK_ULONG);
+}
