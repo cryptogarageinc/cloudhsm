@@ -77,6 +77,9 @@ func Pkcs11OpenSessionWithContext(ctx context.Context, pin string) (sessionHandl
 	err = convertRVtoByte(rv)
 	if err == nil {
 		sessionHandler = session
+		if hasCkUlong32Bit() {
+			sessionHandler &= 0xffffffff
+		}
 		logging(ctx, LogInfo, "Pkcs11OpenSession", getMessage(context))
 	} else {
 		logging(ctx, LogError, "Pkcs11OpenSession", getErrorMessage(context))
@@ -114,6 +117,12 @@ func Pkcs11GetSessionInfo(session uint64) (info *SessionInfo, err error) {
 	err = convertRVtoByte(rv)
 	if err != nil {
 		return nil, err
+	}
+	if hasCkUlong32Bit() {
+		data.SlotID &= 0xffffffff
+		data.State &= 0xffffffff
+		data.Flags &= 0xffffffff
+		data.DeviceError &= 0xffffffff
 	}
 	return &data, nil
 }
@@ -280,6 +289,9 @@ func GetPubkeyWithContext(ctx context.Context, sessionHandle uint64, pubkey uint
 
 	err = convertRVtoByte(rv)
 	if err == nil {
+		if hasCkUlong32Bit() {
+			written &= 0xffffffff
+		}
 		pubkeyBytes = data[:written]
 		logging(ctx, LogInfo, "GetPubkey", getMessage(context))
 	} else {
@@ -329,6 +341,10 @@ func GenerateKeyPairWithContext(ctx context.Context, sessionHandle uint64, named
 	if err == nil {
 		pubkey = outPubkey
 		privkey = outPrivkey
+		if hasCkUlong32Bit() {
+			pubkey &= 0xffffffff
+			privkey &= 0xffffffff
+		}
 		logging(ctx, LogInfo, "GenerateKeyPair", getMessage(context))
 	} else {
 		logging(ctx, LogError, "GenerateKeyPair", getErrorMessage(context))
@@ -452,6 +468,11 @@ func logging(ctx context.Context, level LogLevel, funcName, message string) {
 			logFunc(level, funcName+":"+message)
 		}
 	}
+}
+
+func hasCkUlong32Bit() bool {
+	size := Get_ck_ulong_size()
+	return size == 4
 }
 
 func createNativeContext() (context uintptr, err error) {

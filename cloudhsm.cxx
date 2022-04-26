@@ -416,6 +416,17 @@ intgo _wrap_bytes_to_new_hexstring_cloudhsm_ef3f3870b99405a1(_gostring_ _swig_go
 }
 
 
+intgo _wrap_get_ck_ulong_size_cloudhsm_ef3f3870b99405a1() {
+  unsigned int result;
+  intgo _swig_go_result;
+  
+  
+  result = (unsigned int)get_ck_ulong_size();
+  _swig_go_result = result; 
+  return _swig_go_result;
+}
+
+
 CK_RV *_wrap_pkcs11_create_context_cloudhsm_ef3f3870b99405a1(void **_swig_go_0) {
   void **arg1 = (void **) 0 ;
   CK_RV result;

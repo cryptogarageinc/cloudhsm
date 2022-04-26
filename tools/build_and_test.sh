@@ -1,4 +1,6 @@
-#!/bin/sh -l
+#!/bin/sh
+
+ls /usr/lib/pkcs11
 
 cd /github/workspace
 mkdir -p dist/usr/local/lib

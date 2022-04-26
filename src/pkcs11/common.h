@@ -38,6 +38,8 @@ void pkcs11_finalize();
 
 int bytes_to_new_hexstring(char *bytes, size_t bytes_len, char **hex);
 
+unsigned int get_ck_ulong_size();
+
 CK_RV pkcs11_create_context(void **context);
 void pkcs11_free_context(void *context);
 CK_RV pkcs11_get_last_error_message(void *context, char **str);
