@@ -1,4 +1,4 @@
-#!/bin/ash
+#!/bin/sh -l
 
 cd /github/workspace
 mkdir -p dist/usr/local/lib

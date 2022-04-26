@@ -16,6 +16,7 @@ func TestSigning(t *testing.T) {
 
 	// libPath := "/opt/cloudhsm/lib/libcloudhsm_pkcs11.so"
 	libPath := "/usr/lib/pkcs11/onepin-opensc-pkcs11.so" // for docker  // onepin-opensc-pkcs11.so  opensc-pkcs11.so
+	// libPath := "/usr/lib/x86_64-linux-gnu/onepin-opensc-pkcs11.so" // for ubuntu
 	pin := []byte("user:password")
 	privkey := uint64(0)
 	mechType := uint64(0x00001041) // ECDSA
