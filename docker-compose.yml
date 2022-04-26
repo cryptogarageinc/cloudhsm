@@ -11,3 +11,14 @@ services:
     volumes:
       - .:/github/workspace/cloudhsm
     entrypoint: /github/workspace/cloudhsm/tools/build_and_test.sh
+
+  ubuntu-build:
+    container_name: 'cloudhsm_ubuntu_tester'
+    build:
+      context: .
+      dockerfile: ubuntu1804.dockerfile
+    working_dir: /github/workspace
+    volumes:
+      - .:/github/workspace/cloudhsm
+    tty: true
+    entrypoint: /github/workspace/cloudhsm/tools/build_and_test.sh
