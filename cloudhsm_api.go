@@ -1,6 +1,7 @@
 package cloudhsm
 
 import (
+	"context"
 	"fmt"
 	"unsafe"
 )
@@ -17,37 +18,55 @@ const (
 // LogFunc ...
 type LogFunc func(level LogLevel, message string)
 
+// ContextLogFunc ...
+type ContextLogFunc func(ctx context.Context, level LogLevel, message string)
+
 // SetLogger ...
 func SetLogger(logger LogFunc) {
 	logFunc = logger
 }
 
+// SetContextLogger ...
+func SetContextLogger(logger ContextLogFunc) {
+	ctxLogFunc = logger
+}
+
 // Pkcs11Initialize ...
 func Pkcs11Initialize(path string) (err error) {
-	context, err := createContext()
+	return Pkcs11InitializeWithContext(nil, path)
+}
+
+// Pkcs11InitializeWithContext ...
+func Pkcs11InitializeWithContext(ctx context.Context, path string) (err error) {
+	context, err := createNativeContext()
 	if err != nil {
 		return err
 	}
-	defer freeContext(context)
+	defer freeNativeContext(context)
 
 	rv := Pkcs11_initialize(context, path)
 	err = convertRVtoByte(rv)
 	if err == nil {
 		fmt.Printf("call Pkcs11Initialize:%s\n", getMessage(context))
-		logging(LogInfo, "Pkcs11Initialize", getMessage(context))
+		logging(ctx, LogInfo, "Pkcs11Initialize", getMessage(context))
 	} else {
-		logging(LogError, "Pkcs11Initialize", getErrorMessage(context))
+		logging(ctx, LogError, "Pkcs11Initialize", getErrorMessage(context))
 	}
 	return
 }
 
 // Pkcs11OpenSession ...
 func Pkcs11OpenSession(pin string) (sessionHandler uint64, err error) {
-	context, err := createContext()
+	return Pkcs11OpenSessionWithContext(nil, pin)
+}
+
+// Pkcs11OpenSessionWithContext ...
+func Pkcs11OpenSessionWithContext(ctx context.Context, pin string) (sessionHandler uint64, err error) {
+	context, err := createNativeContext()
 	if err != nil {
 		return sessionHandler, err
 	}
-	defer freeContext(context)
+	defer freeNativeContext(context)
 
 	pinPtr := SwigcptrCK_UTF8CHAR_PTR(uintptr(unsafe.Pointer(&pin)))
 	session := uint64(0)
@@ -58,9 +77,9 @@ func Pkcs11OpenSession(pin string) (sessionHandler uint64, err error) {
 	err = convertRVtoByte(rv)
 	if err == nil {
 		sessionHandler = session
-		logging(LogInfo, "Pkcs11OpenSession", getMessage(context))
+		logging(ctx, LogInfo, "Pkcs11OpenSession", getMessage(context))
 	} else {
-		logging(LogError, "Pkcs11OpenSession", getErrorMessage(context))
+		logging(ctx, LogError, "Pkcs11OpenSession", getErrorMessage(context))
 	}
 	return sessionHandler, err
 }
@@ -133,11 +152,16 @@ func Pkcs11Finalize() {
 
 // GenerateSignature ...
 func GenerateSignature(sessionHandle uint64, privkey uint64, mechType uint64, data []byte) (signature [64]byte, err error) {
-	context, err := createContext()
+	return GenerateSignatureWithContext(nil, sessionHandle, privkey, mechType, data)
+}
+
+// GenerateSignatureWithContext ...
+func GenerateSignatureWithContext(ctx context.Context, sessionHandle uint64, privkey uint64, mechType uint64, data []byte) (signature [64]byte, err error) {
+	context, err := createNativeContext()
 	if err != nil {
 		return signature, err
 	}
-	defer freeContext(context)
+	defer freeNativeContext(context)
 
 	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
 	privkeyObj := SwigcptrCK_OBJECT_HANDLE(uintptr(unsafe.Pointer(&privkey)))
@@ -169,20 +193,25 @@ func GenerateSignature(sessionHandle uint64, privkey uint64, mechType uint64, da
 
 	err = convertRVtoByte(rv)
 	if err == nil {
-		logging(LogInfo, "GenerateSignature", getMessage(context))
+		logging(ctx, LogInfo, "GenerateSignature", getMessage(context))
 	} else {
-		logging(LogError, "GenerateSignature", getErrorMessage(context))
+		logging(ctx, LogError, "GenerateSignature", getErrorMessage(context))
 	}
 	return
 }
 
 // VerifySignature ...
 func VerifySignature(sessionHandle uint64, pubkey uint64, mechType uint64, data []byte, signature []byte) (err error) {
-	context, err := createContext()
+	return VerifySignatureWithContext(nil, sessionHandle, pubkey, mechType, data, signature)
+}
+
+// VerifySignatureWithContext ...
+func VerifySignatureWithContext(ctx context.Context, sessionHandle uint64, pubkey uint64, mechType uint64, data []byte, signature []byte) (err error) {
+	context, err := createNativeContext()
 	if err != nil {
 		return err
 	}
-	defer freeContext(context)
+	defer freeNativeContext(context)
 
 	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
 	pubkeyObj := SwigcptrCK_OBJECT_HANDLE(uintptr(unsafe.Pointer(&pubkey)))
@@ -211,20 +240,25 @@ func VerifySignature(sessionHandle uint64, pubkey uint64, mechType uint64, data 
 		sigLenObj)
 	err = convertRVtoByte(rv)
 	if err == nil {
-		logging(LogInfo, "VerifySignature", getMessage(context))
+		logging(ctx, LogInfo, "VerifySignature", getMessage(context))
 	} else {
-		logging(LogError, "VerifySignature", getErrorMessage(context))
+		logging(ctx, LogError, "VerifySignature", getErrorMessage(context))
 	}
 	return err
 }
 
 // GetPubkey ...
 func GetPubkey(sessionHandle uint64, pubkey uint64) (pubkeyBytes []byte, err error) {
-	context, err := createContext()
+	return GetPubkeyWithContext(nil, sessionHandle, pubkey)
+}
+
+// GetPubkeyWithContext ...
+func GetPubkeyWithContext(ctx context.Context, sessionHandle uint64, pubkey uint64) (pubkeyBytes []byte, err error) {
+	context, err := createNativeContext()
 	if err != nil {
 		return pubkeyBytes, err
 	}
-	defer freeContext(context)
+	defer freeNativeContext(context)
 
 	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
 	pubkeyObj := SwigcptrCK_OBJECT_HANDLE(uintptr(unsafe.Pointer(&pubkey)))
@@ -247,20 +281,25 @@ func GetPubkey(sessionHandle uint64, pubkey uint64) (pubkeyBytes []byte, err err
 	err = convertRVtoByte(rv)
 	if err == nil {
 		pubkeyBytes = data[:written]
-		logging(LogInfo, "GetPubkey", getMessage(context))
+		logging(ctx, LogInfo, "GetPubkey", getMessage(context))
 	} else {
-		logging(LogError, "GetPubkey", getErrorMessage(context))
+		logging(ctx, LogError, "GetPubkey", getErrorMessage(context))
 	}
 	return pubkeyBytes, err
 }
 
 // GenerateKeyPair ...
 func GenerateKeyPair(sessionHandle uint64, namedCurveOid []byte) (pubkey uint64, privkey uint64, err error) {
-	context, err := createContext()
+	return GenerateKeyPairWithContext(nil, sessionHandle, namedCurveOid)
+}
+
+// GenerateKeyPairWithContext ...
+func GenerateKeyPairWithContext(ctx context.Context, sessionHandle uint64, namedCurveOid []byte) (pubkey uint64, privkey uint64, err error) {
+	context, err := createNativeContext()
 	if err != nil {
 		return pubkey, privkey, err
 	}
-	defer freeContext(context)
+	defer freeNativeContext(context)
 
 	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
 
@@ -290,9 +329,9 @@ func GenerateKeyPair(sessionHandle uint64, namedCurveOid []byte) (pubkey uint64,
 	if err == nil {
 		pubkey = outPubkey
 		privkey = outPrivkey
-		logging(LogInfo, "GenerateKeyPair", getMessage(context))
+		logging(ctx, LogInfo, "GenerateKeyPair", getMessage(context))
 	} else {
-		logging(LogError, "GenerateKeyPair", getErrorMessage(context))
+		logging(ctx, LogError, "GenerateKeyPair", getErrorMessage(context))
 	}
 	return pubkey, privkey, err
 }
@@ -300,8 +339,9 @@ func GenerateKeyPair(sessionHandle uint64, namedCurveOid []byte) (pubkey uint64,
 // private ---------------------------------------------------------------------
 
 var (
-	logFunc  LogFunc
-	errorMap map[uint64]string
+	logFunc    LogFunc
+	ctxLogFunc ContextLogFunc
+	errorMap   map[uint64]string
 )
 
 func init() {
@@ -402,18 +442,24 @@ func init() {
 	errorMap[CKR_VENDOR_DEFINED] = "CKR_VENDOR_DEFINED"
 }
 
-func logging(level LogLevel, funcName, message string) {
-	if logFunc != nil && message != "" {
-		logFunc(level, funcName+":"+message)
+func logging(ctx context.Context, level LogLevel, funcName, message string) {
+	if ctx != nil {
+		if ctxLogFunc != nil && message != "" {
+			ctxLogFunc(ctx, level, funcName+":"+message)
+		}
+	} else {
+		if logFunc != nil && message != "" {
+			logFunc(level, funcName+":"+message)
+		}
 	}
 }
 
-func createContext() (context uintptr, err error) {
+func createNativeContext() (context uintptr, err error) {
 	ret := Pkcs11_create_context(&context)
 	return context, convertRVtoByte(ret)
 }
 
-func freeContext(context uintptr) {
+func freeNativeContext(context uintptr) {
 	Pkcs11_free_context(context)
 }
 
@@ -421,7 +467,7 @@ func getErrorMessage(context uintptr) (msg string) {
 	rv := Pkcs11_get_last_error_message(context, &msg)
 	err := convertRVtoByte(rv)
 	if err != nil {
-		logging(LogError, "getErrorMessage", err.Error())
+		logging(nil, LogError, "getErrorMessage", err.Error())
 		return ""
 	}
 	return msg
@@ -431,7 +477,7 @@ func getMessage(context uintptr) (msg string) {
 	rv := Pkcs11_get_last_message(context, &msg)
 	err := convertRVtoByte(rv)
 	if err != nil {
-		logging(LogError, "getMessage", err.Error())
+		logging(nil, LogError, "getMessage", err.Error())
 		return ""
 	}
 	return msg
