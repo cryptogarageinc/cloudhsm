@@ -14,28 +14,36 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifndef AWS_CLOUDHSM_PKCS11_INTERNA_H
-#define AWS_CLOUDHSM_PKCS11_INTERNA_H
+#ifndef __C_SAMPLES_H__
+#define __C_SAMPLES_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <sys/types.h>
-#include <cryptoki.h>
+#include "include/pkcs11/v2.40/cryptoki.h"
+#include "include/pkcs11/v2.40/cloudhsm_pkcs11_vendor_defs.h"
 
-extern CK_FUNCTION_LIST *funcs;
+CK_RV pkcs11_initialize(void *context, char *library_path);
 
-typedef struct _Pkcs11Context {
-    char error_message[128];
-    char message[128];
-} Pkcs11Context;
+CK_RV pkcs11_open_session(void *context, const CK_UTF8CHAR_PTR pin, CK_SESSION_HANDLE_PTR session);
 
-// find_objects
-CK_RV find_key_handle_with_label(void *context,
-                                 CK_SESSION_HANDLE session,
-                                 const char* label,
-                                 CK_OBJECT_HANDLE_PTR key_handle);
+CK_RV pkcs11_get_session_info(CK_SESSION_HANDLE session, CK_ULONG* slotID,
+        CK_ULONG* state, CK_ULONG* flags, CK_ULONG* ulDeviceError);
+
+void pkcs11_finalize_session(CK_SESSION_HANDLE session);
+void pkcs11_close_session(CK_SESSION_HANDLE session);
+void pkcs11_finalize();
+
+int bytes_to_new_hexstring(char *bytes, size_t bytes_len, char **hex);
+
+unsigned int get_ck_ulong_size();
+
+CK_RV pkcs11_create_context(void **context);
+void pkcs11_free_context(void *context);
+CK_RV pkcs11_get_last_error_message(void *context, char **str);
+CK_RV pkcs11_get_last_message(void *context, char **str);
 
 #ifdef __cplusplus
 }

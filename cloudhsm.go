@@ -30,7 +30,8 @@ typedef struct { void* array; intgo len; intgo cap; } _goslice_;
 
 
 #cgo CPPFLAGS: -I${SRCDIR}/include/pkcs11/v2.40
-#cgo LDFLAGS: -L${SRCDIR}/build/Release -L/usr/local/lib -L/usr/local/lib64 -lcloudhsmpkcs11util -ldl
+#cgo linux LDFLAGS:-L. -L/usr/local/lib -Wl,-unresolved-symbols=ignore-all -ldl
+#cgo darwin LDFLAGS:-L. -L/usr/local/lib -Wl,-unresolved-symbols=ignore-all -ldl
 
 typedef _gostring_ swig_type_1;
 typedef _gostring_ swig_type_2;
@@ -40,27 +41,27 @@ typedef _gostring_ swig_type_5;
 typedef _gostring_ swig_type_6;
 typedef _gostring_ swig_type_7;
 typedef _gostring_ swig_type_8;
-extern void _wrap_Swig_free_cloudhsm_ef3f3870b99405a1(uintptr_t arg1);
-extern uintptr_t _wrap_Swig_malloc_cloudhsm_ef3f3870b99405a1(swig_intgo arg1);
-extern uintptr_t _wrap_pkcs11_initialize_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, swig_type_1 arg2);
-extern uintptr_t _wrap_pkcs11_open_session_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3);
-extern uintptr_t _wrap_pkcs11_get_session_info_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5);
-extern void _wrap_pkcs11_finalize_session_cloudhsm_ef3f3870b99405a1(uintptr_t arg1);
-extern void _wrap_pkcs11_close_session_cloudhsm_ef3f3870b99405a1(uintptr_t arg1);
-extern void _wrap_pkcs11_finalize_cloudhsm_ef3f3870b99405a1(void);
-extern swig_intgo _wrap_bytes_to_new_hexstring_cloudhsm_ef3f3870b99405a1(swig_type_2 arg1, swig_type_3 arg2, swig_voidp arg3);
-extern swig_intgo _wrap_get_ck_ulong_size_cloudhsm_ef3f3870b99405a1(void);
-extern uintptr_t _wrap_pkcs11_create_context_cloudhsm_ef3f3870b99405a1(swig_voidp arg1);
-extern void _wrap_pkcs11_free_context_cloudhsm_ef3f3870b99405a1(uintptr_t arg1);
-extern uintptr_t _wrap_pkcs11_get_last_error_message_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, swig_voidp arg2);
-extern uintptr_t _wrap_pkcs11_get_last_message_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, swig_voidp arg2);
-extern uintptr_t _wrap_generate_ec_keypair_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, swig_type_4 arg5, swig_type_5 arg6, uintptr_t arg7, uintptr_t arg8);
-extern uintptr_t _wrap_generate_signature_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, uintptr_t arg7, uintptr_t arg8);
-extern uintptr_t _wrap_verify_signature_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, uintptr_t arg7, uintptr_t arg8);
-extern uintptr_t _wrap_get_ec_pubkey_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5);
-extern uintptr_t _wrap_generate_signature_with_label_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, uintptr_t arg2, swig_type_6 arg3, uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, uintptr_t arg7, uintptr_t arg8);
-extern uintptr_t _wrap_verify_signature_with_label_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, uintptr_t arg2, swig_type_7 arg3, uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, uintptr_t arg7, uintptr_t arg8);
-extern uintptr_t _wrap_get_ec_pubkey_with_label_cloudhsm_ef3f3870b99405a1(uintptr_t arg1, uintptr_t arg2, swig_type_8 arg3, uintptr_t arg4, uintptr_t arg5);
+extern void _wrap_Swig_free_cloudhsm_3234e2e935e106d6(uintptr_t arg1);
+extern uintptr_t _wrap_Swig_malloc_cloudhsm_3234e2e935e106d6(swig_intgo arg1);
+extern uintptr_t _wrap_pkcs11_initialize_cloudhsm_3234e2e935e106d6(uintptr_t arg1, swig_type_1 arg2);
+extern uintptr_t _wrap_pkcs11_open_session_cloudhsm_3234e2e935e106d6(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3);
+extern uintptr_t _wrap_pkcs11_get_session_info_cloudhsm_3234e2e935e106d6(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5);
+extern void _wrap_pkcs11_finalize_session_cloudhsm_3234e2e935e106d6(uintptr_t arg1);
+extern void _wrap_pkcs11_close_session_cloudhsm_3234e2e935e106d6(uintptr_t arg1);
+extern void _wrap_pkcs11_finalize_cloudhsm_3234e2e935e106d6(void);
+extern swig_intgo _wrap_bytes_to_new_hexstring_cloudhsm_3234e2e935e106d6(swig_type_2 arg1, swig_type_3 arg2, swig_voidp arg3);
+extern swig_intgo _wrap_get_ck_ulong_size_cloudhsm_3234e2e935e106d6(void);
+extern uintptr_t _wrap_pkcs11_create_context_cloudhsm_3234e2e935e106d6(swig_voidp arg1);
+extern void _wrap_pkcs11_free_context_cloudhsm_3234e2e935e106d6(uintptr_t arg1);
+extern uintptr_t _wrap_pkcs11_get_last_error_message_cloudhsm_3234e2e935e106d6(uintptr_t arg1, swig_voidp arg2);
+extern uintptr_t _wrap_pkcs11_get_last_message_cloudhsm_3234e2e935e106d6(uintptr_t arg1, swig_voidp arg2);
+extern uintptr_t _wrap_generate_ec_keypair_cloudhsm_3234e2e935e106d6(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, swig_type_4 arg5, swig_type_5 arg6, uintptr_t arg7, uintptr_t arg8);
+extern uintptr_t _wrap_generate_signature_cloudhsm_3234e2e935e106d6(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, uintptr_t arg7, uintptr_t arg8);
+extern uintptr_t _wrap_verify_signature_cloudhsm_3234e2e935e106d6(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, uintptr_t arg7, uintptr_t arg8);
+extern uintptr_t _wrap_get_ec_pubkey_cloudhsm_3234e2e935e106d6(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t arg4, uintptr_t arg5);
+extern uintptr_t _wrap_generate_signature_with_label_cloudhsm_3234e2e935e106d6(uintptr_t arg1, uintptr_t arg2, swig_type_6 arg3, uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, uintptr_t arg7, uintptr_t arg8);
+extern uintptr_t _wrap_verify_signature_with_label_cloudhsm_3234e2e935e106d6(uintptr_t arg1, uintptr_t arg2, swig_type_7 arg3, uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, uintptr_t arg7, uintptr_t arg8);
+extern uintptr_t _wrap_get_ec_pubkey_with_label_cloudhsm_3234e2e935e106d6(uintptr_t arg1, uintptr_t arg2, swig_type_8 arg3, uintptr_t arg4, uintptr_t arg5);
 #undef intgo
 */
 import "C"
@@ -83,13 +84,13 @@ type _ sync.Mutex
 
 func Swig_free(arg1 uintptr) {
 	_swig_i_0 := arg1
-	C._wrap_Swig_free_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0))
+	C._wrap_Swig_free_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0))
 }
 
 func Swig_malloc(arg1 int) (_swig_ret uintptr) {
 	var swig_r uintptr
 	_swig_i_0 := arg1
-	swig_r = (uintptr)(C._wrap_Swig_malloc_cloudhsm_ef3f3870b99405a1(C.swig_intgo(_swig_i_0)))
+	swig_r = (uintptr)(C._wrap_Swig_malloc_cloudhsm_3234e2e935e106d6(C.swig_intgo(_swig_i_0)))
 	return swig_r
 }
 
@@ -97,7 +98,7 @@ func Pkcs11_initialize(arg1 uintptr, arg2 string) (_swig_ret CK_RV) {
 	var swig_r CK_RV
 	_swig_i_0 := arg1
 	_swig_i_1 := arg2
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_initialize_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), *(*C.swig_type_1)(unsafe.Pointer(&_swig_i_1)))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_initialize_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), *(*C.swig_type_1)(unsafe.Pointer(&_swig_i_1)))))
 	if Swig_escape_always_false {
 		Swig_escape_val = arg2
 	}
@@ -109,7 +110,7 @@ func Pkcs11_open_session(arg1 uintptr, arg2 CK_UTF8CHAR_PTR, arg3 CK_SESSION_HAN
 	_swig_i_0 := arg1
 	_swig_i_1 := arg2.Swigcptr()
 	_swig_i_2 := arg3.Swigcptr()
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_open_session_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_open_session_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2))))
 	return swig_r
 }
 
@@ -120,22 +121,22 @@ func Pkcs11_get_session_info(arg1 CK_SESSION_HANDLE, arg2 CK_ULONG, arg3 CK_ULON
 	_swig_i_2 := arg3.Swigcptr()
 	_swig_i_3 := arg4.Swigcptr()
 	_swig_i_4 := arg5.Swigcptr()
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_get_session_info_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_get_session_info_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4))))
 	return swig_r
 }
 
 func Pkcs11_finalize_session(arg1 CK_SESSION_HANDLE) {
 	_swig_i_0 := arg1.Swigcptr()
-	C._wrap_pkcs11_finalize_session_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0))
+	C._wrap_pkcs11_finalize_session_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0))
 }
 
 func Pkcs11_close_session(arg1 CK_SESSION_HANDLE) {
 	_swig_i_0 := arg1.Swigcptr()
-	C._wrap_pkcs11_close_session_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0))
+	C._wrap_pkcs11_close_session_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0))
 }
 
 func Pkcs11_finalize() {
-	C._wrap_pkcs11_finalize_cloudhsm_ef3f3870b99405a1()
+	C._wrap_pkcs11_finalize_cloudhsm_3234e2e935e106d6()
 }
 
 func Bytes_to_new_hexstring(arg1 string, arg2 int64, arg3 *string) (_swig_ret int) {
@@ -143,7 +144,7 @@ func Bytes_to_new_hexstring(arg1 string, arg2 int64, arg3 *string) (_swig_ret in
 	_swig_i_0 := arg1
 	_swig_i_1 := arg2
 	_swig_i_2 := arg3
-	swig_r = (int)(C._wrap_bytes_to_new_hexstring_cloudhsm_ef3f3870b99405a1(*(*C.swig_type_2)(unsafe.Pointer(&_swig_i_0)), C.swig_type_3(_swig_i_1), C.swig_voidp(_swig_i_2)))
+	swig_r = (int)(C._wrap_bytes_to_new_hexstring_cloudhsm_3234e2e935e106d6(*(*C.swig_type_2)(unsafe.Pointer(&_swig_i_0)), C.swig_type_3(_swig_i_1), C.swig_voidp(_swig_i_2)))
 	if Swig_escape_always_false {
 		Swig_escape_val = arg1
 	}
@@ -152,27 +153,27 @@ func Bytes_to_new_hexstring(arg1 string, arg2 int64, arg3 *string) (_swig_ret in
 
 func Get_ck_ulong_size() (_swig_ret uint) {
 	var swig_r uint
-	swig_r = (uint)(C._wrap_get_ck_ulong_size_cloudhsm_ef3f3870b99405a1())
+	swig_r = (uint)(C._wrap_get_ck_ulong_size_cloudhsm_3234e2e935e106d6())
 	return swig_r
 }
 
 func Pkcs11_create_context(arg1 *uintptr) (_swig_ret CK_RV) {
 	var swig_r CK_RV
 	_swig_i_0 := arg1
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_create_context_cloudhsm_ef3f3870b99405a1(C.swig_voidp(_swig_i_0))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_create_context_cloudhsm_3234e2e935e106d6(C.swig_voidp(_swig_i_0))))
 	return swig_r
 }
 
 func Pkcs11_free_context(arg1 uintptr) {
 	_swig_i_0 := arg1
-	C._wrap_pkcs11_free_context_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0))
+	C._wrap_pkcs11_free_context_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0))
 }
 
 func Pkcs11_get_last_error_message(arg1 uintptr, arg2 *string) (_swig_ret CK_RV) {
 	var swig_r CK_RV
 	_swig_i_0 := arg1
 	_swig_i_1 := arg2
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_get_last_error_message_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.swig_voidp(_swig_i_1))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_get_last_error_message_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.swig_voidp(_swig_i_1))))
 	return swig_r
 }
 
@@ -180,7 +181,7 @@ func Pkcs11_get_last_message(arg1 uintptr, arg2 *string) (_swig_ret CK_RV) {
 	var swig_r CK_RV
 	_swig_i_0 := arg1
 	_swig_i_1 := arg2
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_get_last_message_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.swig_voidp(_swig_i_1))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_pkcs11_get_last_message_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.swig_voidp(_swig_i_1))))
 	return swig_r
 }
 
@@ -197,7 +198,7 @@ func Generate_ec_keypair(arg1 uintptr, arg2 CK_SESSION_HANDLE, arg3 CK_BYTE_PTR,
 	_swig_i_5 := arg6
 	_swig_i_6 := arg7.Swigcptr()
 	_swig_i_7 := arg8.Swigcptr()
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_generate_ec_keypair_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), *(*C.swig_type_4)(unsafe.Pointer(&_swig_i_4)), *(*C.swig_type_5)(unsafe.Pointer(&_swig_i_5)), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_generate_ec_keypair_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), *(*C.swig_type_4)(unsafe.Pointer(&_swig_i_4)), *(*C.swig_type_5)(unsafe.Pointer(&_swig_i_5)), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
 	if Swig_escape_always_false {
 		Swig_escape_val = arg5
 	}
@@ -217,7 +218,7 @@ func Generate_signature(arg1 uintptr, arg2 CK_SESSION_HANDLE, arg3 CK_OBJECT_HAN
 	_swig_i_5 := arg6.Swigcptr()
 	_swig_i_6 := arg7.Swigcptr()
 	_swig_i_7 := arg8.Swigcptr()
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_generate_signature_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4), C.uintptr_t(_swig_i_5), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_generate_signature_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4), C.uintptr_t(_swig_i_5), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
 	return swig_r
 }
 
@@ -231,7 +232,7 @@ func Verify_signature(arg1 uintptr, arg2 CK_SESSION_HANDLE, arg3 CK_OBJECT_HANDL
 	_swig_i_5 := arg6.Swigcptr()
 	_swig_i_6 := arg7.Swigcptr()
 	_swig_i_7 := arg8.Swigcptr()
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_verify_signature_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4), C.uintptr_t(_swig_i_5), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_verify_signature_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4), C.uintptr_t(_swig_i_5), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
 	return swig_r
 }
 
@@ -242,7 +243,7 @@ func Get_ec_pubkey(arg1 uintptr, arg2 CK_SESSION_HANDLE, arg3 CK_OBJECT_HANDLE, 
 	_swig_i_2 := arg3.Swigcptr()
 	_swig_i_3 := arg4.Swigcptr()
 	_swig_i_4 := arg5.Swigcptr()
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_get_ec_pubkey_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_get_ec_pubkey_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), C.uintptr_t(_swig_i_2), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4))))
 	return swig_r
 }
 
@@ -256,7 +257,7 @@ func Generate_signature_with_label(arg1 uintptr, arg2 CK_SESSION_HANDLE, arg3 st
 	_swig_i_5 := arg6.Swigcptr()
 	_swig_i_6 := arg7.Swigcptr()
 	_swig_i_7 := arg8.Swigcptr()
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_generate_signature_with_label_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), *(*C.swig_type_6)(unsafe.Pointer(&_swig_i_2)), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4), C.uintptr_t(_swig_i_5), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_generate_signature_with_label_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), *(*C.swig_type_6)(unsafe.Pointer(&_swig_i_2)), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4), C.uintptr_t(_swig_i_5), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
 	if Swig_escape_always_false {
 		Swig_escape_val = arg3
 	}
@@ -273,7 +274,7 @@ func Verify_signature_with_label(arg1 uintptr, arg2 CK_SESSION_HANDLE, arg3 stri
 	_swig_i_5 := arg6.Swigcptr()
 	_swig_i_6 := arg7.Swigcptr()
 	_swig_i_7 := arg8.Swigcptr()
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_verify_signature_with_label_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), *(*C.swig_type_7)(unsafe.Pointer(&_swig_i_2)), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4), C.uintptr_t(_swig_i_5), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_verify_signature_with_label_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), *(*C.swig_type_7)(unsafe.Pointer(&_swig_i_2)), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4), C.uintptr_t(_swig_i_5), C.uintptr_t(_swig_i_6), C.uintptr_t(_swig_i_7))))
 	if Swig_escape_always_false {
 		Swig_escape_val = arg3
 	}
@@ -287,7 +288,7 @@ func Get_ec_pubkey_with_label(arg1 uintptr, arg2 CK_SESSION_HANDLE, arg3 string,
 	_swig_i_2 := arg3
 	_swig_i_3 := arg4.Swigcptr()
 	_swig_i_4 := arg5.Swigcptr()
-	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_get_ec_pubkey_with_label_cloudhsm_ef3f3870b99405a1(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), *(*C.swig_type_8)(unsafe.Pointer(&_swig_i_2)), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4))))
+	swig_r = (CK_RV)(SwigcptrCK_RV(C._wrap_get_ec_pubkey_with_label_cloudhsm_3234e2e935e106d6(C.uintptr_t(_swig_i_0), C.uintptr_t(_swig_i_1), *(*C.swig_type_8)(unsafe.Pointer(&_swig_i_2)), C.uintptr_t(_swig_i_3), C.uintptr_t(_swig_i_4))))
 	if Swig_escape_always_false {
 		Swig_escape_val = arg3
 	}

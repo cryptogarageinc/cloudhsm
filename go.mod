@@ -1,4 +1,4 @@
-module github.com/cryptogarageinc/cloudhsm/v3
+module github.com/cryptogarageinc/cloudhsm/v4
 
 go 1.17
 
