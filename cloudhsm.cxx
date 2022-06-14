@@ -240,14 +240,14 @@ static void* Swig_malloc(int c) {
 }
 
 
-#include "src/pkcs11/common.h"
-#include "src/pkcs11/sign.h"
+#include "common.h"
+#include "sign.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void _wrap_Swig_free_cloudhsm_ef3f3870b99405a1(void *_swig_go_0) {
+void _wrap_Swig_free_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0) {
   void *arg1 = (void *) 0 ;
   
   arg1 = *(void **)&_swig_go_0; 
@@ -257,7 +257,7 @@ void _wrap_Swig_free_cloudhsm_ef3f3870b99405a1(void *_swig_go_0) {
 }
 
 
-void *_wrap_Swig_malloc_cloudhsm_ef3f3870b99405a1(intgo _swig_go_0) {
+void *_wrap_Swig_malloc_cloudhsm_dc74a0697ca8b3ca(intgo _swig_go_0) {
   int arg1 ;
   void *result = 0 ;
   void *_swig_go_result;
@@ -270,7 +270,7 @@ void *_wrap_Swig_malloc_cloudhsm_ef3f3870b99405a1(intgo _swig_go_0) {
 }
 
 
-CK_RV *_wrap_pkcs11_initialize_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, _gostring_ _swig_go_1) {
+CK_RV *_wrap_pkcs11_initialize_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, _gostring_ _swig_go_1) {
   void *arg1 = (void *) 0 ;
   char *arg2 = (char *) 0 ;
   CK_RV result;
@@ -290,7 +290,7 @@ CK_RV *_wrap_pkcs11_initialize_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, _gost
 }
 
 
-CK_RV *_wrap_pkcs11_open_session_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_UTF8CHAR_PTR *_swig_go_1, CK_SESSION_HANDLE_PTR *_swig_go_2) {
+CK_RV *_wrap_pkcs11_open_session_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, CK_UTF8CHAR_PTR *_swig_go_1, CK_SESSION_HANDLE_PTR *_swig_go_2) {
   void *arg1 = (void *) 0 ;
   CK_UTF8CHAR_PTR arg2 ;
   CK_SESSION_HANDLE_PTR arg3 ;
@@ -321,7 +321,7 @@ CK_RV *_wrap_pkcs11_open_session_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_
 }
 
 
-CK_RV *_wrap_pkcs11_get_session_info_cloudhsm_ef3f3870b99405a1(CK_SESSION_HANDLE *_swig_go_0, CK_ULONG *_swig_go_1, CK_ULONG *_swig_go_2, CK_ULONG *_swig_go_3, CK_ULONG *_swig_go_4) {
+CK_RV *_wrap_pkcs11_get_session_info_cloudhsm_dc74a0697ca8b3ca(CK_SESSION_HANDLE *_swig_go_0, CK_ULONG *_swig_go_1, CK_ULONG *_swig_go_2, CK_ULONG *_swig_go_3, CK_ULONG *_swig_go_4) {
   CK_SESSION_HANDLE arg1 ;
   CK_ULONG *arg2 = (CK_ULONG *) 0 ;
   CK_ULONG *arg3 = (CK_ULONG *) 0 ;
@@ -349,7 +349,7 @@ CK_RV *_wrap_pkcs11_get_session_info_cloudhsm_ef3f3870b99405a1(CK_SESSION_HANDLE
 }
 
 
-void _wrap_pkcs11_finalize_session_cloudhsm_ef3f3870b99405a1(CK_SESSION_HANDLE *_swig_go_0) {
+void _wrap_pkcs11_finalize_session_cloudhsm_dc74a0697ca8b3ca(CK_SESSION_HANDLE *_swig_go_0) {
   CK_SESSION_HANDLE arg1 ;
   CK_SESSION_HANDLE *argp1 ;
   
@@ -366,7 +366,7 @@ void _wrap_pkcs11_finalize_session_cloudhsm_ef3f3870b99405a1(CK_SESSION_HANDLE *
 }
 
 
-void _wrap_pkcs11_close_session_cloudhsm_ef3f3870b99405a1(CK_SESSION_HANDLE *_swig_go_0) {
+void _wrap_pkcs11_close_session_cloudhsm_dc74a0697ca8b3ca(CK_SESSION_HANDLE *_swig_go_0) {
   CK_SESSION_HANDLE arg1 ;
   CK_SESSION_HANDLE *argp1 ;
   
@@ -383,13 +383,13 @@ void _wrap_pkcs11_close_session_cloudhsm_ef3f3870b99405a1(CK_SESSION_HANDLE *_sw
 }
 
 
-void _wrap_pkcs11_finalize_cloudhsm_ef3f3870b99405a1() {
+void _wrap_pkcs11_finalize_cloudhsm_dc74a0697ca8b3ca() {
   pkcs11_finalize();
   
 }
 
 
-intgo _wrap_bytes_to_new_hexstring_cloudhsm_ef3f3870b99405a1(_gostring_ _swig_go_0, long long _swig_go_1, _gostring_* _swig_go_2) {
+intgo _wrap_bytes_to_new_hexstring_cloudhsm_dc74a0697ca8b3ca(_gostring_ _swig_go_0, long long _swig_go_1, _gostring_* _swig_go_2) {
   char *arg1 = (char *) 0 ;
   size_t arg2 ;
   char **arg3 = (char **) 0 ;
@@ -416,7 +416,7 @@ intgo _wrap_bytes_to_new_hexstring_cloudhsm_ef3f3870b99405a1(_gostring_ _swig_go
 }
 
 
-intgo _wrap_get_ck_ulong_size_cloudhsm_ef3f3870b99405a1() {
+intgo _wrap_get_ck_ulong_size_cloudhsm_dc74a0697ca8b3ca() {
   unsigned int result;
   intgo _swig_go_result;
   
@@ -427,7 +427,7 @@ intgo _wrap_get_ck_ulong_size_cloudhsm_ef3f3870b99405a1() {
 }
 
 
-CK_RV *_wrap_pkcs11_create_context_cloudhsm_ef3f3870b99405a1(void **_swig_go_0) {
+CK_RV *_wrap_pkcs11_create_context_cloudhsm_dc74a0697ca8b3ca(void **_swig_go_0) {
   void **arg1 = (void **) 0 ;
   CK_RV result;
   CK_RV *_swig_go_result;
@@ -440,7 +440,7 @@ CK_RV *_wrap_pkcs11_create_context_cloudhsm_ef3f3870b99405a1(void **_swig_go_0) 
 }
 
 
-void _wrap_pkcs11_free_context_cloudhsm_ef3f3870b99405a1(void *_swig_go_0) {
+void _wrap_pkcs11_free_context_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0) {
   void *arg1 = (void *) 0 ;
   
   arg1 = *(void **)&_swig_go_0; 
@@ -450,7 +450,7 @@ void _wrap_pkcs11_free_context_cloudhsm_ef3f3870b99405a1(void *_swig_go_0) {
 }
 
 
-CK_RV *_wrap_pkcs11_get_last_error_message_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, _gostring_* _swig_go_1) {
+CK_RV *_wrap_pkcs11_get_last_error_message_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, _gostring_* _swig_go_1) {
   void *arg1 = (void *) 0 ;
   char **arg2 = (char **) 0 ;
   CK_RV result;
@@ -470,7 +470,7 @@ CK_RV *_wrap_pkcs11_get_last_error_message_cloudhsm_ef3f3870b99405a1(void *_swig
 }
 
 
-CK_RV *_wrap_pkcs11_get_last_message_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, _gostring_* _swig_go_1) {
+CK_RV *_wrap_pkcs11_get_last_message_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, _gostring_* _swig_go_1) {
   void *arg1 = (void *) 0 ;
   char **arg2 = (char **) 0 ;
   CK_RV result;
@@ -490,7 +490,7 @@ CK_RV *_wrap_pkcs11_get_last_message_cloudhsm_ef3f3870b99405a1(void *_swig_go_0,
 }
 
 
-CK_RV *_wrap_generate_ec_keypair_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, CK_BYTE_PTR *_swig_go_2, CK_ULONG *_swig_go_3, _gostring_ _swig_go_4, _gostring_ _swig_go_5, CK_OBJECT_HANDLE_PTR *_swig_go_6, CK_OBJECT_HANDLE_PTR *_swig_go_7) {
+CK_RV *_wrap_generate_ec_keypair_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, CK_BYTE_PTR *_swig_go_2, CK_ULONG *_swig_go_3, _gostring_ _swig_go_4, _gostring_ _swig_go_5, CK_OBJECT_HANDLE_PTR *_swig_go_6, CK_OBJECT_HANDLE_PTR *_swig_go_7) {
   void *arg1 = (void *) 0 ;
   CK_SESSION_HANDLE arg2 ;
   CK_BYTE_PTR arg3 ;
@@ -562,7 +562,7 @@ CK_RV *_wrap_generate_ec_keypair_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_
 }
 
 
-CK_RV *_wrap_generate_signature_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, CK_OBJECT_HANDLE *_swig_go_2, CK_MECHANISM_TYPE *_swig_go_3, CK_BYTE_PTR *_swig_go_4, CK_ULONG *_swig_go_5, CK_BYTE_PTR *_swig_go_6, CK_ULONG_PTR *_swig_go_7) {
+CK_RV *_wrap_generate_signature_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, CK_OBJECT_HANDLE *_swig_go_2, CK_MECHANISM_TYPE *_swig_go_3, CK_BYTE_PTR *_swig_go_4, CK_ULONG *_swig_go_5, CK_BYTE_PTR *_swig_go_6, CK_ULONG_PTR *_swig_go_7) {
   void *arg1 = (void *) 0 ;
   CK_SESSION_HANDLE arg2 ;
   CK_OBJECT_HANDLE arg3 ;
@@ -638,7 +638,7 @@ CK_RV *_wrap_generate_signature_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_S
 }
 
 
-CK_RV *_wrap_verify_signature_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, CK_OBJECT_HANDLE *_swig_go_2, CK_MECHANISM_TYPE *_swig_go_3, CK_BYTE_PTR *_swig_go_4, CK_ULONG *_swig_go_5, CK_BYTE_PTR *_swig_go_6, CK_ULONG *_swig_go_7) {
+CK_RV *_wrap_verify_signature_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, CK_OBJECT_HANDLE *_swig_go_2, CK_MECHANISM_TYPE *_swig_go_3, CK_BYTE_PTR *_swig_go_4, CK_ULONG *_swig_go_5, CK_BYTE_PTR *_swig_go_6, CK_ULONG *_swig_go_7) {
   void *arg1 = (void *) 0 ;
   CK_SESSION_HANDLE arg2 ;
   CK_OBJECT_HANDLE arg3 ;
@@ -714,7 +714,7 @@ CK_RV *_wrap_verify_signature_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_SES
 }
 
 
-CK_RV *_wrap_get_ec_pubkey_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, CK_OBJECT_HANDLE *_swig_go_2, CK_BYTE_PTR *_swig_go_3, CK_ULONG_PTR *_swig_go_4) {
+CK_RV *_wrap_get_ec_pubkey_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, CK_OBJECT_HANDLE *_swig_go_2, CK_BYTE_PTR *_swig_go_3, CK_ULONG_PTR *_swig_go_4) {
   void *arg1 = (void *) 0 ;
   CK_SESSION_HANDLE arg2 ;
   CK_OBJECT_HANDLE arg3 ;
@@ -763,7 +763,7 @@ CK_RV *_wrap_get_ec_pubkey_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_SESSIO
 }
 
 
-CK_RV *_wrap_generate_signature_with_label_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, _gostring_ _swig_go_2, CK_MECHANISM_TYPE *_swig_go_3, CK_BYTE_PTR *_swig_go_4, CK_ULONG *_swig_go_5, CK_BYTE_PTR *_swig_go_6, CK_ULONG_PTR *_swig_go_7) {
+CK_RV *_wrap_generate_signature_with_label_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, _gostring_ _swig_go_2, CK_MECHANISM_TYPE *_swig_go_3, CK_BYTE_PTR *_swig_go_4, CK_ULONG *_swig_go_5, CK_BYTE_PTR *_swig_go_6, CK_ULONG_PTR *_swig_go_7) {
   void *arg1 = (void *) 0 ;
   CK_SESSION_HANDLE arg2 ;
   char *arg3 = (char *) 0 ;
@@ -837,7 +837,7 @@ CK_RV *_wrap_generate_signature_with_label_cloudhsm_ef3f3870b99405a1(void *_swig
 }
 
 
-CK_RV *_wrap_verify_signature_with_label_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, _gostring_ _swig_go_2, CK_MECHANISM_TYPE *_swig_go_3, CK_BYTE_PTR *_swig_go_4, CK_ULONG *_swig_go_5, CK_BYTE_PTR *_swig_go_6, CK_ULONG *_swig_go_7) {
+CK_RV *_wrap_verify_signature_with_label_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, _gostring_ _swig_go_2, CK_MECHANISM_TYPE *_swig_go_3, CK_BYTE_PTR *_swig_go_4, CK_ULONG *_swig_go_5, CK_BYTE_PTR *_swig_go_6, CK_ULONG *_swig_go_7) {
   void *arg1 = (void *) 0 ;
   CK_SESSION_HANDLE arg2 ;
   char *arg3 = (char *) 0 ;
@@ -911,7 +911,7 @@ CK_RV *_wrap_verify_signature_with_label_cloudhsm_ef3f3870b99405a1(void *_swig_g
 }
 
 
-CK_RV *_wrap_get_ec_pubkey_with_label_cloudhsm_ef3f3870b99405a1(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, _gostring_ _swig_go_2, CK_BYTE_PTR *_swig_go_3, CK_ULONG_PTR *_swig_go_4) {
+CK_RV *_wrap_get_ec_pubkey_with_label_cloudhsm_dc74a0697ca8b3ca(void *_swig_go_0, CK_SESSION_HANDLE *_swig_go_1, _gostring_ _swig_go_2, CK_BYTE_PTR *_swig_go_3, CK_ULONG_PTR *_swig_go_4) {
   void *arg1 = (void *) 0 ;
   CK_SESSION_HANDLE arg2 ;
   char *arg3 = (char *) 0 ;

@@ -1,7 +1,7 @@
 %module cloudhsm
 %{
-#include "src/pkcs11/common.h"
-#include "src/pkcs11/sign.h"
+#include "common.h"
+#include "sign.h"
 %}
 
 %typemap(argout) (char **) {
@@ -12,10 +12,11 @@
 
 %insert(cgo_comment_typedefs) %{
 #cgo CPPFLAGS: -I${SRCDIR}/include/pkcs11/v2.40
-#cgo LDFLAGS: -L${SRCDIR}/build/Release -L/usr/local/lib -L/usr/local/lib64 -lcloudhsmpkcs11util -ldl
+#cgo linux LDFLAGS:-L. -L/usr/local/lib -Wl,-unresolved-symbols=ignore-all -ldl
+#cgo darwin LDFLAGS:-L. -L/usr/local/lib -ldl
 %}
-%include "src/pkcs11/common.h"
-%include "src/pkcs11/sign.h"
+%include "common.h"
+%include "sign.h"
 %go_import("unsafe")
 %insert(go_wrapper) %{
 
