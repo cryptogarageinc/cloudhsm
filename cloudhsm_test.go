@@ -1,6 +1,7 @@
 package cloudhsm
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -9,6 +10,11 @@ import (
 
 func TestSigning(t *testing.T) {
 	SetLogger(func(level LogLevel, message string) {
+		if message != "" {
+			fmt.Printf("[%s] %s\n", level, message)
+		}
+	})
+	SetContextLogger(func(_ context.Context, level LogLevel, message string) {
 		if message != "" {
 			fmt.Printf("[%s] %s\n", level, message)
 		}
@@ -44,7 +50,9 @@ func TestSigning(t *testing.T) {
 	err = VerifySignature(sessionHandle, pubkey, mechType, data[:], signature[:])
 	assert.NoError(t, err)
 
-	pubkeyHandle, privkeyHandle, err := GenerateKeyPair(sessionHandle, secp256k1)
+	pubkeyLabel := "TestPubkeyLabel"
+	privkeyLabel := "TestPrivkeyLabel"
+	pubkeyHandle, privkeyHandle, err := GenerateKeyPair(sessionHandle, secp256k1, pubkeyLabel, privkeyLabel)
 	assert.NoError(t, err)
 	assert.NotEqual(t, uint64(0), pubkeyHandle)
 	assert.NotEqual(t, uint64(0), privkeyHandle)
@@ -52,6 +60,18 @@ func TestSigning(t *testing.T) {
 	pubkeyBytes, err := GetPubkey(sessionHandle, pubkey)
 	assert.NoError(t, err)
 	assert.NotEqual(t, 0, len(pubkeyBytes))
+
+	ctx := context.Background()
+	signature2, err := GenerateSignatureWithLabel(ctx, sessionHandle, privkeyLabel, mechType, data[:])
+	assert.NoError(t, err)
+	assert.NotEqual(t, 0, len(signature2))
+
+	err = VerifySignatureWithLabel(ctx, sessionHandle, pubkeyLabel, mechType, data[:], signature[:])
+	assert.NoError(t, err)
+
+	pubkeyBytes2, err := GetPubkeyWithLabel(ctx, sessionHandle, pubkeyLabel)
+	assert.NoError(t, err)
+	assert.NotEqual(t, 0, len(pubkeyBytes2))
 
 	// Pkcs11FinalizeSession(sessionHandle)
 

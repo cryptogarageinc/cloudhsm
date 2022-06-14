@@ -128,6 +128,8 @@ CK_RV verify_signature(void *context,
  * @param session Valid PKCS11 session.
  * @param named_curve_oid Curve to use when generating key pair. Valid curves are listed here: https://docs.aws.amazon.com/cloudhsm/latest/userguide/pkcs11-key-types.html
  * @param named_curve_oid_len Length of the OID
+ * @param public_key_label the public key label.
+ * @param private_key_label the private key label.
  * @param public_key Pointer where the public key handle will be stored.
  * @param private_key Pointer where the private key handle will be stored.
  * @return CK_RV Value returned by the PKCS#11 library. This will indicate success or failure.
@@ -136,23 +138,31 @@ CK_RV generate_ec_keypair(void *context,
                           CK_SESSION_HANDLE session,
                           CK_BYTE_PTR named_curve_oid,
                           CK_ULONG named_curve_oid_len,
+                          const char* public_key_label,
+                          const char* private_key_label,
                           CK_OBJECT_HANDLE_PTR public_key,
                           CK_OBJECT_HANDLE_PTR private_key)
 {
     CK_RV rv;
     CK_MECHANISM mech = {CKM_EC_KEY_PAIR_GEN, NULL, 0};
     Pkcs11Context *ctx = (Pkcs11Context *)context;
+    CK_BYTE_PTR pk_label_ptr = (unsigned char*)public_key_label;
+    CK_ULONG pk_label_len = strlen(public_key_label);
+    CK_BYTE_PTR sk_label_ptr = (unsigned char*)private_key_label;
+    CK_ULONG sk_label_len = strlen(private_key_label);
 
     CK_ATTRIBUTE public_key_template[] = {
         {CKA_VERIFY,    &true_val,       sizeof(CK_BBOOL)},
         {CKA_EC_PARAMS, named_curve_oid, named_curve_oid_len},
         {CKA_TOKEN,     &true_val,       sizeof(CK_BBOOL)},
+        {CKA_LABEL,     pk_label_ptr,    pk_label_len},
     };
 
     CK_ATTRIBUTE private_key_template[] = {
-        {CKA_SIGN,    &true_val, sizeof(CK_BBOOL)},
-        {CKA_PRIVATE, &true_val, sizeof(CK_BBOOL)},
-        {CKA_TOKEN,   &true_val, sizeof(CK_BBOOL)},
+        {CKA_SIGN,    &true_val,    sizeof(CK_BBOOL)},
+        {CKA_PRIVATE, &true_val,    sizeof(CK_BBOOL)},
+        {CKA_TOKEN,   &true_val,    sizeof(CK_BBOOL)},
+        {CKA_LABEL,   sk_label_ptr, sk_label_len},
     };
 
     if (!context) {
@@ -268,3 +278,70 @@ CK_RV get_ec_pubkey(void *context,
     return rv;
 }
 
+CK_RV generate_signature_with_label(void *context,
+                         CK_SESSION_HANDLE session,
+                         const char* private_key_label,
+                         CK_MECHANISM_TYPE mechanism,
+                         CK_BYTE_PTR data,
+                         CK_ULONG data_length,
+                         CK_BYTE_PTR signature,
+                         CK_ULONG_PTR signature_length)
+{
+    CK_RV rv;
+    CK_OBJECT_HANDLE key_handle = 0;
+    rv = find_key_handle_with_label(context, session, private_key_label, &key_handle);
+    if (rv != CKR_OK) {
+        return rv;
+    }
+
+    rv = generate_signature(context, session, key_handle, mechanism,
+            data, data_length, signature, signature_length);
+    return rv;
+}
+
+CK_RV verify_signature_with_label(void *context,
+                       CK_SESSION_HANDLE session,
+                       const char* public_key_label,
+                       CK_MECHANISM_TYPE mechanism,
+                       CK_BYTE_PTR data,
+                       CK_ULONG data_length,
+                       CK_BYTE_PTR signature,
+                       CK_ULONG signature_length)
+{
+    CK_RV rv;
+    CK_OBJECT_HANDLE key_handle = 0;
+    rv = find_key_handle_with_label(context, session, public_key_label, &key_handle);
+    if (rv != CKR_OK) {
+        return rv;
+    }
+
+    rv = verify_signature(context, session, key_handle, mechanism,
+            data, data_length, signature, signature_length);
+    return rv;
+}
+
+/**
+ * Get an EC pubkey with label.
+ * @param context context.
+ * @param session Valid PKCS11 session.
+ * @param public_key_label the public key label.
+ * @param pubkey Pointer where the public key byte array.
+ * @param pubkey_length public key byte array length.
+ * @return CK_RV Value returned by the PKCS#11 library. This will indicate success or failure.
+ */
+CK_RV get_ec_pubkey_with_label(void *context,
+                    CK_SESSION_HANDLE session,
+                    const char* public_key_label,
+                    CK_BYTE_PTR pubkey,
+                    CK_ULONG_PTR pubkey_length)
+{
+    CK_RV rv;
+    CK_OBJECT_HANDLE key_handle = 0;
+    rv = find_key_handle_with_label(context, session, public_key_label, &key_handle);
+    if (rv != CKR_OK) {
+        return rv;
+    }
+
+    rv = get_ec_pubkey(context, session, key_handle, pubkey, pubkey_length);
+    return rv;
+}
