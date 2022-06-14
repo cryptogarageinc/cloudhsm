@@ -43,7 +43,7 @@ endif()
 
 target_sources(${PROJECT_NAME}
   PRIVATE
-    common.c pkcs11.c common.h ec_sign.c sign.h attributes.c attributes.h
+    common.c pkcs11.c common.h ec_sign.c sign.h attributes.c attributes.h find_objects.c
 )
 target_link_libraries(${PROJECT_NAME} dl)
 

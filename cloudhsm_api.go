@@ -209,6 +209,50 @@ func GenerateSignatureWithContext(ctx context.Context, sessionHandle uint64, pri
 	return
 }
 
+// GenerateSignatureWithLabel ...
+func GenerateSignatureWithLabel(ctx context.Context, sessionHandle uint64, privkeyLabel string, mechType uint64, data []byte) (signature [64]byte, err error) {
+	context, err := createNativeContext()
+	if err != nil {
+		return signature, err
+	}
+	defer freeNativeContext(context)
+
+	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
+	mechTypeObj := SwigcptrCK_MECHANISM_TYPE(uintptr(unsafe.Pointer(&mechType)))
+
+	dataPtr := uintptr(unsafe.Pointer(&data[0]))
+	dataObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&dataPtr)))
+
+	dataLen := uint64(len(data))
+	dataLenObj := SwigcptrCK_ULONG(unsafe.Pointer(&dataLen))
+
+	sigPtr := uintptr(unsafe.Pointer(&signature[0]))
+	sigObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&sigPtr)))
+
+	// 64 bytes signature
+	written := uint64(64)
+	sigLen := uintptr(unsafe.Pointer(&written))
+	sigLenPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&sigLen)))
+
+	rv := Generate_signature_with_label(
+		context,
+		sessionHandleObj,
+		privkeyLabel,
+		mechTypeObj,
+		dataObj,
+		dataLenObj,
+		sigObj,
+		sigLenPtrObj)
+
+	err = convertRVtoByte(rv)
+	if err == nil {
+		logging(ctx, LogInfo, "GenerateSignatureWithLabel", getMessage(context))
+	} else {
+		logging(ctx, LogError, "GenerateSignatureWithLabel", getErrorMessage(context))
+	}
+	return
+}
+
 // VerifySignature ...
 func VerifySignature(sessionHandle uint64, pubkey uint64, mechType uint64, data []byte, signature []byte) (err error) {
 	return VerifySignatureWithContext(nil, sessionHandle, pubkey, mechType, data, signature)
@@ -252,6 +296,47 @@ func VerifySignatureWithContext(ctx context.Context, sessionHandle uint64, pubke
 		logging(ctx, LogInfo, "VerifySignature", getMessage(context))
 	} else {
 		logging(ctx, LogError, "VerifySignature", getErrorMessage(context))
+	}
+	return err
+}
+
+// VerifySignatureWithLabel ...
+func VerifySignatureWithLabel(ctx context.Context, sessionHandle uint64, pubkeyLabel string, mechType uint64, data []byte, signature []byte) (err error) {
+	context, err := createNativeContext()
+	if err != nil {
+		return err
+	}
+	defer freeNativeContext(context)
+
+	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
+	mechTypeObj := SwigcptrCK_MECHANISM_TYPE(uintptr(unsafe.Pointer(&mechType)))
+
+	dataPtr := uintptr(unsafe.Pointer(&data[0]))
+	dataObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&dataPtr)))
+
+	dataLen := uint64(len(data))
+	dataLenObj := SwigcptrCK_ULONG(uintptr(unsafe.Pointer(&dataLen)))
+
+	sigPtr := uintptr(unsafe.Pointer(&signature[0]))
+	sigObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&sigPtr)))
+
+	sigLen := uint64(len(signature))
+	sigLenObj := SwigcptrCK_ULONG(uintptr(unsafe.Pointer(&sigLen)))
+
+	rv := Verify_signature_with_label(
+		context,
+		sessionHandleObj,
+		pubkeyLabel,
+		mechTypeObj,
+		dataObj,
+		dataLenObj,
+		sigObj,
+		sigLenObj)
+	err = convertRVtoByte(rv)
+	if err == nil {
+		logging(ctx, LogInfo, "VerifySignatureWithLabel", getMessage(context))
+	} else {
+		logging(ctx, LogError, "VerifySignatureWithLabel", getErrorMessage(context))
 	}
 	return err
 }
@@ -300,13 +385,51 @@ func GetPubkeyWithContext(ctx context.Context, sessionHandle uint64, pubkey uint
 	return pubkeyBytes, err
 }
 
+// GetPubkeyWithLabel ...
+func GetPubkeyWithLabel(ctx context.Context, sessionHandle uint64, pubkeyLabel string) (pubkeyBytes []byte, err error) {
+	context, err := createNativeContext()
+	if err != nil {
+		return pubkeyBytes, err
+	}
+	defer freeNativeContext(context)
+
+	sessionHandleObj := SwigcptrCK_SESSION_HANDLE(uintptr(unsafe.Pointer(&sessionHandle)))
+
+	var data [256]byte
+	dataPtr := uintptr(unsafe.Pointer(&data[0]))
+	dataObj := SwigcptrCK_BYTE_PTR(uintptr(unsafe.Pointer(&dataPtr)))
+
+	written := uint64(256)
+	dataLen := uintptr(unsafe.Pointer(&written))
+	dataLenPtrObj := SwigcptrCK_ULONG_PTR(uintptr(unsafe.Pointer(&dataLen)))
+
+	rv := Get_ec_pubkey_with_label(
+		context,
+		sessionHandleObj,
+		pubkeyLabel,
+		dataObj,
+		dataLenPtrObj)
+
+	err = convertRVtoByte(rv)
+	if err == nil {
+		if hasCkUlong32Bit() {
+			written &= 0xffffffff
+		}
+		pubkeyBytes = data[:written]
+		logging(ctx, LogInfo, "GetPubkey", getMessage(context))
+	} else {
+		logging(ctx, LogError, "GetPubkey", getErrorMessage(context))
+	}
+	return pubkeyBytes, err
+}
+
 // GenerateKeyPair ...
-func GenerateKeyPair(sessionHandle uint64, namedCurveOid []byte) (pubkey uint64, privkey uint64, err error) {
-	return GenerateKeyPairWithContext(nil, sessionHandle, namedCurveOid)
+func GenerateKeyPair(sessionHandle uint64, namedCurveOid []byte, pubkeyLabel, privkeyLabel string) (pubkey uint64, privkey uint64, err error) {
+	return GenerateKeyPairWithContext(nil, sessionHandle, namedCurveOid, pubkeyLabel, privkeyLabel)
 }
 
 // GenerateKeyPairWithContext ...
-func GenerateKeyPairWithContext(ctx context.Context, sessionHandle uint64, namedCurveOid []byte) (pubkey uint64, privkey uint64, err error) {
+func GenerateKeyPairWithContext(ctx context.Context, sessionHandle uint64, namedCurveOid []byte, pubkeyLabel, privkeyLabel string) (pubkey uint64, privkey uint64, err error) {
 	context, err := createNativeContext()
 	if err != nil {
 		return pubkey, privkey, err
@@ -334,6 +457,8 @@ func GenerateKeyPairWithContext(ctx context.Context, sessionHandle uint64, named
 		sessionHandleObj,
 		dataObj,
 		dataLenObj,
+		pubkeyLabel,
+		privkeyLabel,
 		outPubkeyPtr,
 		outPrivkeyPtr)
 

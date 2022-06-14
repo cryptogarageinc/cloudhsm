@@ -31,6 +31,12 @@ typedef struct _Pkcs11Context {
     char message[128];
 } Pkcs11Context;
 
+// find_objects
+CK_RV find_key_handle_with_label(void *context,
+                                 CK_SESSION_HANDLE session,
+                                 const char* label,
+                                 CK_OBJECT_HANDLE_PTR key_handle);
+
 #ifdef __cplusplus
 }
 #endif
