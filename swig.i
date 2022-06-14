@@ -13,7 +13,7 @@
 %insert(cgo_comment_typedefs) %{
 #cgo CPPFLAGS: -I${SRCDIR}/include/pkcs11/v2.40
 #cgo linux LDFLAGS:-L. -L/usr/local/lib -Wl,-unresolved-symbols=ignore-all -ldl
-#cgo darwin LDFLAGS:-L. -L/usr/local/lib -Wl,-unresolved-symbols=ignore-all -ldl
+#cgo darwin LDFLAGS:-L. -L/usr/local/lib -ldl
 %}
 %include "common.h"
 %include "sign.h"
