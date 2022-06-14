@@ -17,26 +17,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-18.04]
-        go-version: ['^1.13.0', '^1.16.0', '^1.17.0', '^1.18.0']
+        os: [macos-latest, windows-latest, ubuntu-20.04, ubuntu-18.04]
+        go-version: ['^1.17.0', '^1.18.0']
 
     steps:
     - name: setup go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
         go-version: ${{ matrix.go-version }}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: ubuntu-install
-      if: runner.os != 'macOS'
+      if: runner.os == 'Linux'
       run: |
         sudo apt install opensc-pkcs11
-    - name: cmake
-      run: |
-        cmake --version
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DTARGET_RPATH="./build/Release"
-        make
-        cd ..
     - name: go build
       run: go build
