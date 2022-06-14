@@ -27,27 +27,10 @@
   * VerifySignatureWithLabel
   * GetPubkeyWithLabel
 
-## build
+## develop
 
 ### re-generate from swig
 
 ```sh
-mkdir build
-cd build
-cmake ..
-make
-cd ..
 ./gen_swig.sh
-```
-
-### build and install
-
-```
-cd cloudhsm
-git checkout develop
-mkdir build
-cd build
-cmake .. -D ENABLE_SHARED=on
-make
-sudo make install
 ```
