@@ -8,8 +8,8 @@ import (
 	context "context"
 	reflect "reflect"
 
-	pkcs11 "github.com/cryptogarageinc/cloudhsm/v4/apis/pkcs11"
-	gomock "github.com/golang/mock/gomock"
+	cloudhsm "github.com/cryptogarageinc/cloudhsm/v4/apis/pkcs11"
+	gomock "go.uber.org/mock/gomock"
 )
 
 // MockCloudHSMPkcs11 is a mock of CloudHSMPkcs11 interface.
@@ -148,10 +148,10 @@ func (mr *MockCloudHSMPkcs11MockRecorder) GetPubkeyWithLabel(ctx, sessionHandle,
 }
 
 // GetSessionInfo mocks base method.
-func (m *MockCloudHSMPkcs11) GetSessionInfo(session uint64) (*pkcs11.SessionInfo, error) {
+func (m *MockCloudHSMPkcs11) GetSessionInfo(session uint64) (*cloudhsm.SessionInfo, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetSessionInfo", session)
-	ret0, _ := ret[0].(*pkcs11.SessionInfo)
+	ret0, _ := ret[0].(*cloudhsm.SessionInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
