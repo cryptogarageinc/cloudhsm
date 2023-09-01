@@ -5,8 +5,11 @@ update:
 	go mod download
 	go mod tidy
 
+generate:
+	go generate ./...
+
 format:
-	go run golang.org/x/tools/cmd/goimports@v0.1.12 -w .
+	go run golang.org/x/tools/cmd/goimports@v0.12.0 -w .
 	go mod tidy
 
 vet:
